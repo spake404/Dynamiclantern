@@ -1,0 +1,9 @@
+{
+  "dynamiclantern.config.title": "动态灯笼",
+  "dynamiclantern.config.render": "腰间渲染",
+  "dynamiclantern.config.physics": "摆动物理",
+  "dynamiclantern.config.shader": "Curios灯笼发光",
+  "dynamiclantern.config.left_side": "左侧悬挂",
+  "dynamiclantern.config.back": "靠后位置",
+  "dynamiclantern.config.bounciness": "摆动强度"
+}

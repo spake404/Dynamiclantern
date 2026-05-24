@@ -1,0 +1,9 @@
+{
+  "dynamiclantern.config.title": "Dynamic Lantern",
+  "dynamiclantern.config.render": "Waist render",
+  "dynamiclantern.config.physics": "Swing physics",
+  "dynamiclantern.config.shader": "Curios lantern glow",
+  "dynamiclantern.config.left_side": "Left side",
+  "dynamiclantern.config.back": "Back position",
+  "dynamiclantern.config.bounciness": "Bounciness"
+}
