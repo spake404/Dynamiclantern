@@ -83,11 +83,13 @@ public class CurioLanternRenderer implements ICurioRenderer {
     }
 
     private static Vec3 getWaistAnchor(boolean armored) {
-        float side = Config.LEFT_SIDE.get() ? 0.1F : 2.0F;
+        float sideAnchor = Config.LEFT_SIDE.get()
+                ? (armored ? -0.05F : 0.1F)
+                : (armored ? 2.05F : 1.9F);
         float back = Config.BACK_LANTERN.get() ? (armored ? -3.1F : -3.0F) : -1.0F;
         return armored
-                ? new Vec3(side + 0.05F, -1.25F, back + 0.05F)
-                : new Vec3(side - 0.1F, -1.25F, back - 0.1F);
+                ? new Vec3(sideAnchor, -1.25F, back + 0.05F)
+                : new Vec3(sideAnchor, -1.25F, back - 0.1F);
     }
 
     private static void attachToBody(PoseStack poseStack, ModelPart body, Vec3 anchor) {
