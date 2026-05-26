@@ -1,35 +1,45 @@
 modLoader = "javafml"
 loaderVersion = "${loader_version_range}"
 license = "${mod_license}"
+issueTrackerURL = "https://github.com/spake404/Dynamiclantern/issues"
 
 [[mods]]
 modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
+displayURL = "https://github.com/spake404/Dynamiclantern"
+#logoFile="dynamiclantern.png" #optional
+credits = "NeoForge port for Minecraft 1.21.1 with Curios, Epic Fight, and shader-lighting compatibility."
 authors = "${mod_authors}"
-displayTest = "MATCH_VERSION"
 description = '''${mod_description}'''
 
 [[mixins]]
 config = "${mod_id}.mixins.json"
 
 [[dependencies."${mod_id}"]]
-modId = "forge"
-mandatory = true
-versionRange = "${forge_version_range}"
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies."${mod_id}"]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies."${mod_id}"]]
 modId = "curios"
-mandatory = true
-versionRange = "*"
+type = "required"
+versionRange = "${curios_version_range}"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies."${mod_id}"]]
+modId = "epicfight"
+type = "optional"
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "CLIENT"

@@ -18,13 +18,13 @@ public class DynamiclanternConfigScreen extends Screen {
     protected void init() {
         int center = this.width / 2;
         int y = 48;
-        addToggle(center - 155, y, "dynamiclantern.config.render", Config.RENDER_WAIST_LANTERN.get(), value -> Config.RENDER_WAIST_LANTERN.set(value));
-        addToggle(center + 5, y, "dynamiclantern.config.physics", Config.ENABLE_PHYSICS.get(), value -> Config.ENABLE_PHYSICS.set(value));
+        addToggle(center - 155, y, "dynamiclantern.config.render", Config.RENDER_WAIST_LANTERN.get(), Config.RENDER_WAIST_LANTERN::set);
+        addToggle(center + 5, y, "dynamiclantern.config.physics", Config.ENABLE_PHYSICS.get(), Config.ENABLE_PHYSICS::set);
         y += 26;
-        addToggle(center - 155, y, "dynamiclantern.config.shader", Config.SHADER_OFFHAND_OVERRIDE.get(), value -> Config.SHADER_OFFHAND_OVERRIDE.set(value));
-        addToggle(center + 5, y, "dynamiclantern.config.left_side", Config.LEFT_SIDE.get(), value -> Config.LEFT_SIDE.set(value));
+        addToggle(center - 155, y, "dynamiclantern.config.shader", Config.SHADER_OFFHAND_OVERRIDE.get(), Config.SHADER_OFFHAND_OVERRIDE::set);
+        addToggle(center + 5, y, "dynamiclantern.config.left_side", Config.LEFT_SIDE.get(), Config.LEFT_SIDE::set);
         y += 26;
-        addToggle(center - 155, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), value -> Config.BACK_LANTERN.set(value));
+        addToggle(center - 155, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), Config.BACK_LANTERN::set);
         addBounciness(center + 5, y);
         y += 40;
         this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> {
@@ -68,7 +68,7 @@ public class DynamiclanternConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, partialTick);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 18, 0xFFFFFF);
         super.render(graphics, mouseX, mouseY, partialTick);
     }

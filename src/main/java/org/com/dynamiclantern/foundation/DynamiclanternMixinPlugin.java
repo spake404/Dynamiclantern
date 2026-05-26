@@ -1,8 +1,8 @@
 package org.com.dynamiclantern.foundation;
 
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.LoadingModList;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.LoadingModList;
+import net.neoforged.neoforgespi.language.IModInfo;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -30,7 +30,7 @@ public class DynamiclanternMixinPlugin implements IMixinConfigPlugin {
 
     private static boolean isModLoaded(String modid) {
         if (ModList.get() == null) {
-            return LoadingModList.get().getMods().stream().map(ModInfo::getModId).anyMatch(modid::equals);
+            return LoadingModList.get().getMods().stream().map(IModInfo::getModId).anyMatch(modid::equals);
         }
         return ModList.get().isLoaded(modid);
     }

@@ -3,8 +3,8 @@ package org.com.dynamiclantern;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
@@ -37,7 +37,6 @@ public final class CuriosLanternCache {
 
     private static ItemStack scan(Player player) {
         Optional<SlotResult> result = CuriosApi.getCuriosInventory(player)
-                .resolve()
                 .flatMap(handler -> handler.findFirstCurio(Dynamiclantern::isLantern));
         return result.map(SlotResult::stack).orElse(ItemStack.EMPTY);
     }

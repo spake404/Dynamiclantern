@@ -19,7 +19,7 @@ import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
-import yesman.epicfight.compat.CuriosCompat;
+import yesman.epicfight.compat.curiosapi.CuriosCompat;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public class EpicFightCurioLanternRenderer extends CurioLanternRenderer implements CuriosCompat.EpicFightCurioRenderer {
@@ -55,7 +55,7 @@ public class EpicFightCurioLanternRenderer extends CurioLanternRenderer implemen
 
     private static void applyHipTransform(PoseStack poseStack, LivingEntityPatch<LivingEntity> entityPatch, OpenMatrix4f[] poses, Player player) {
         Joint joint = findHipJoint(entityPatch.getArmature());
-        if (joint != null) {
+        if (joint != null && joint.getId() >= 0 && joint.getId() < poses.length) {
             MathUtils.mulStack(poseStack, poses[joint.getId()]);
         }
 

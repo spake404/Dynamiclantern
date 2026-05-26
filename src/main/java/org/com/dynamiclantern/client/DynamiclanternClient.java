@@ -1,10 +1,9 @@
 package org.com.dynamiclantern.client;
 
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.ModList;
-import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 import net.minecraft.world.item.Items;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 public final class DynamiclanternClient {
     private DynamiclanternClient() {
@@ -18,8 +17,9 @@ public final class DynamiclanternClient {
             CuriosRendererRegistry.register(Items.LANTERN, CurioLanternRenderer::new);
             CuriosRendererRegistry.register(Items.SOUL_LANTERN, CurioLanternRenderer::new);
         }
-        ModLoadingContext.get().registerExtensionPoint(
-                ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory((minecraft, parent) -> new DynamiclanternConfigScreen(parent)));
+    }
+
+    public static IConfigScreenFactory configScreenFactory() {
+        return (container, parent) -> new DynamiclanternConfigScreen(parent);
     }
 }

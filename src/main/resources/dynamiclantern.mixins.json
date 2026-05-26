@@ -2,14 +2,13 @@
   "required": true,
   "minVersion": "0.8",
   "package": "org.com.dynamiclantern.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "refmap": "dynamiclantern.refmap.json",
+  "compatibilityLevel": "JAVA_21",
   "plugin": "org.com.dynamiclantern.foundation.DynamiclanternMixinPlugin",
   "mixins": [
-  ],
-  "client": [
     "IrisIdMapUniformsMixin",
     "ModelPartAccessor"
+  ],
+  "client": [
   ],
   "injectors": {
     "defaultRequire": 1

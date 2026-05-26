@@ -1,6 +1,8 @@
 {
   "pack": {
-    "description": "dynamiclantern resources",
-    "pack_format": 15
+    "description": {
+      "text": "dynamiclantern resources"
+    },
+    "pack_format": 34
   }
 }
