@@ -26,7 +26,7 @@ public final class DynamiclanternClient {
 
     public static void registerConfiguredRenderers() {
         boolean changed = false;
-        for (Item item : WaistItemRules.getConfiguredItems()) {
+        for (Item item : WaistItemRules.getRenderableItems()) {
             changed |= registerRenderer(item);
         }
         if (changed) {

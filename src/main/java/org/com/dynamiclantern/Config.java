@@ -23,11 +23,14 @@ public final class Config {
             .comment("Render the lantern closer to the back of the waist.")
             .define("backLantern", false);
     public static final ForgeConfigSpec.BooleanValue SHADER_OFFHAND_OVERRIDE = BUILDER
-            .comment("Make Iris/Oculus see a Curios lantern as the offhand item for shader held-item lighting.")
+            .comment("Make Iris/Oculus see a Curios belt light-emitting block item as the offhand item for shader held-item lighting.")
             .define("shaderOffhandOverride", true);
+    public static final ForgeConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = BUILDER
+            .comment("Log Cold Sweat Soulspring Lamp Curios compatibility diagnostics while the lamp is equipped.")
+            .define("soulspringLampDebugLog", false);
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> WAIST_RENDERABLE_ITEMS = BUILDER
-            .comment("Item ids that Dynamic Lantern is allowed to render on the Curios belt slot.")
-            .defineList("waistRenderableItems", WaistItemRules.DEFAULT_ITEM_IDS, value -> value instanceof String);
+            .comment("Additional item ids that Dynamic Lantern is allowed to render on the Curios belt slot.")
+            .defineList("waistRenderableItems", List.of(), value -> value instanceof String);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 

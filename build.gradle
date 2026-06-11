@@ -163,8 +163,11 @@ dependencies {
     compileOnly fg.deobf("curse.maven:epic-fight-mod-405076:8049910")
     runtimeOnly fg.deobf("curse.maven:epic-fight-mod-405076:8049910")
     runtimeOnly fg.deobf("curse.maven:oculus-581495:6020952")
-    implementation fg.deobf("curse.maven:embeddium-908741:5681725")
-    implementation fg.deobf("curse.maven:epicfightcurioscompat-1389133:7866027")
+    runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
+    runtimeOnly fg.deobf("curse.maven:sophisticated-core-618298:8201810")
+    runtimeOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:8206207")
+    runtimeOnly fg.deobf("curse.maven:skinned-lanterns-414154:4656953")
+    runtimeOnly fg.deobf("curse.maven:cold-sweat-506194:8170903")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

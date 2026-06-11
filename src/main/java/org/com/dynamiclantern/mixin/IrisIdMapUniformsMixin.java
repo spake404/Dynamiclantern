@@ -20,13 +20,18 @@ public class IrisIdMapUniformsMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/player/LocalPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack dynamiclantern$useCuriosLanternForOffhand(LocalPlayer player, InteractionHand hand) {
+        ItemStack heldItem = player.getItemInHand(hand);
+        if (WaistItemRules.isShaderLightItem(heldItem)) {
+            return WaistItemRules.shaderLightStack(heldItem);
+        }
+
         if (hand == InteractionHand.OFF_HAND && Config.SHADER_OFFHAND_OVERRIDE.get()) {
-            ItemStack waistItem = WaistItemCache.getOrRefresh(player);
+            ItemStack waistItem = WaistItemCache.getShaderLightOrRefresh(player);
             if (WaistItemRules.isShaderLightItem(waistItem)) {
-                return waistItem;
+                return WaistItemRules.shaderLightStack(waistItem);
             }
         }
 
-        return player.getItemInHand(hand);
+        return heldItem;
     }
 }

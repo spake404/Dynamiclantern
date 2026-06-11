@@ -4,13 +4,17 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(Dynamiclantern.MODID)
 public class Dynamiclantern {
     public static final String MODID = "dynamiclantern";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
     public Dynamiclantern() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
         MinecraftForge.EVENT_BUS.register(WaistItemEvents.class);
+        MinecraftForge.EVENT_BUS.register(ColdSweatSoulspringCompat.class);
     }
 }

@@ -2,6 +2,14 @@
   "replace": false,
   "values": [
     "minecraft:lantern",
-    "minecraft:soul_lantern"
+    "minecraft:soul_lantern",
+    {
+      "id": "under_the_moon:moon_lamp",
+      "required": false
+    },
+    {
+      "id": "cold_sweat:soulspring_lamp",
+      "required": false
+    }
   ]
 }

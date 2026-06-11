@@ -44,7 +44,7 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             float headPitch) {
         if (!Config.RENDER_WAIST_LANTERN.get()
                 || !WaistItemRules.isBeltSlot(slotContext)
-                || !WaistItemRules.isConfiguredWaistItem(stack)
+                || !WaistItemRules.isRenderableWaistItem(stack)
                 || !(slotContext.entity() instanceof Player player)
                 || !(parent.getModel() instanceof PlayerModel<?> playerModel)) {
             return;
@@ -57,8 +57,8 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
         Vec3 bodyAnchor = getWaistAnchor(armored);
         attachToBody(poseStack, playerModel.body, bodyAnchor);
 
-        float lanternTop = 11.0F / 16.0F;
-        poseStack.translate(0.5F, lanternTop, 0.5F);
+        float pivotY = swingPivotY(stack);
+        poseStack.translate(0.5F, pivotY, 0.5F);
 
         Vector4f localPosition = new Vector4f(1.0F, 1.0F, 1.0F, 1.0F);
         localPosition.mulTranspose(poseStack.last().pose());
@@ -69,7 +69,8 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
         float pitch = (float) swing.z + legOffset - (Config.BACK_LANTERN.get() ? -0.1F : 0.1F) - playerModel.body.xRot;
 
         poseStack.mulPose(new Quaternionf().rotationZYX((float) swing.x, 0.0F, pitch));
-        poseStack.translate(-0.5F, -lanternTop, -0.5F);
+        poseStack.translate(-0.5F, -pivotY, -0.5F);
+        applyModelOffset(stack, poseStack);
 
         WaistItemModelRenderer.render(stack, poseStack, buffers, packedLight);
 
@@ -84,6 +85,16 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
         return armored
                 ? new Vec3(sideAnchor, -1.25F, back + 0.05F)
                 : new Vec3(sideAnchor, -1.25F, back - 0.1F);
+    }
+
+    private static float swingPivotY(ItemStack stack) {
+        return WaistItemRules.isColdSweatSoulspringLamp(stack) ? 1.18F : 11.0F / 16.0F;
+    }
+
+    private static void applyModelOffset(ItemStack stack, PoseStack poseStack) {
+        if (WaistItemRules.isColdSweatSoulspringLamp(stack)) {
+            poseStack.translate(0.0F, -0.28F, 0.0F);
+        }
     }
 
     private static void attachToBody(PoseStack poseStack, ModelPart body, Vec3 anchor) {
