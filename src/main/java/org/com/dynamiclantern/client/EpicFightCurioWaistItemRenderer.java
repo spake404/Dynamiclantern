@@ -2,16 +2,14 @@ package org.com.dynamiclantern.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.com.dynamiclantern.Config;
-import org.com.dynamiclantern.CuriosLanternCache;
+import org.com.dynamiclantern.WaistItemCache;
+import org.com.dynamiclantern.WaistItemRules;
 import org.joml.Quaternionf;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.client.render.CuriosLayer;
@@ -22,7 +20,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.compat.CuriosCompat;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-public class EpicFightCurioLanternRenderer extends CurioLanternRenderer implements CuriosCompat.EpicFightCurioRenderer {
+public class EpicFightCurioWaistItemRenderer extends CurioWaistItemRenderer implements CuriosCompat.EpicFightCurioRenderer {
     @Override
     public void draw(
             ItemStack stack,
@@ -38,17 +36,20 @@ public class EpicFightCurioLanternRenderer extends CurioLanternRenderer implemen
             float limbSwingAmount,
             float ageInTicks,
             float partialTicks) {
-        if (!Config.RENDER_WAIST_LANTERN.get() || !(entity instanceof Player player)) {
+        if (!Config.RENDER_WAIST_LANTERN.get()
+                || !WaistItemRules.isBeltSlot(slotContext)
+                || !WaistItemRules.isConfiguredWaistItem(stack)
+                || !(entity instanceof Player player)) {
             return;
         }
 
-        CuriosLanternCache.remember(player, stack);
+        WaistItemCache.remember(player, stack);
         poseStack.pushPose();
 
         applyHipTransform(poseStack, entityPatch, poses, player);
         Vec3 swing = LanternPhysics.update(player, player.getPosition(partialTicks), partialTicks);
         poseStack.mulPose(new Quaternionf().rotationZYX((float) swing.x, 0.0F, (float) swing.z));
-        renderLanternBlock(stack, poseStack, buffers, packedLight);
+        renderWaistItem(stack, poseStack, buffers, packedLight);
 
         poseStack.popPose();
     }
@@ -88,15 +89,9 @@ public class EpicFightCurioLanternRenderer extends CurioLanternRenderer implemen
         return joint;
     }
 
-    private static void renderLanternBlock(ItemStack stack, PoseStack poseStack, MultiBufferSource buffers, int packedLight) {
+    private static void renderWaistItem(ItemStack stack, PoseStack poseStack, MultiBufferSource buffers, int packedLight) {
         poseStack.translate(-0.30F, -0.68F, -0.30F);
         poseStack.scale(0.60F, 0.60F, 0.60F);
-        Block block = Block.byItem(stack.getItem());
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                block.defaultBlockState(),
-                poseStack,
-                buffers,
-                packedLight,
-                OverlayTexture.NO_OVERLAY);
+        WaistItemModelRenderer.render(stack, poseStack, buffers, packedLight);
     }
 }

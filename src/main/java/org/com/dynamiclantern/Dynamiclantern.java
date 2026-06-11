@@ -11,10 +11,6 @@ public class Dynamiclantern {
 
     public Dynamiclantern() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
-        MinecraftForge.EVENT_BUS.register(CuriosLanternCache.class);
-    }
-
-    public static boolean isLantern(net.minecraft.world.item.ItemStack stack) {
-        return stack.is(net.minecraft.world.item.Items.LANTERN) || stack.is(net.minecraft.world.item.Items.SOUL_LANTERN);
+        MinecraftForge.EVENT_BUS.register(WaistItemEvents.class);
     }
 }

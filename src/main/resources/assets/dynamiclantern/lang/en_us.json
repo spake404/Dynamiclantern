@@ -5,5 +5,13 @@
   "dynamiclantern.config.shader": "Curios lantern glow",
   "dynamiclantern.config.left_side": "Left side",
   "dynamiclantern.config.back": "Back position",
-  "dynamiclantern.config.bounciness": "Bounciness"
+  "dynamiclantern.config.bounciness": "Bounciness",
+  "dynamiclantern.config.waist_items": "Waist display items",
+  "dynamiclantern.config.waist_items.title": "Waist display items",
+  "dynamiclantern.config.waist_items.input": "Item ID",
+  "dynamiclantern.config.waist_items.add": "Add",
+  "dynamiclantern.config.waist_items.remove": "Remove",
+  "dynamiclantern.config.waist_items.invalid": "Invalid item ID",
+  "dynamiclantern.config.waist_items.added": "Added %s",
+  "dynamiclantern.config.waist_items.removed": "Removed %s"
 }

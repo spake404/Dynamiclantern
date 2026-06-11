@@ -26,6 +26,11 @@ public class DynamiclanternConfigScreen extends Screen {
         y += 26;
         addToggle(center - 155, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), value -> Config.BACK_LANTERN.set(value));
         addBounciness(center + 5, y);
+        y += 26;
+        this.addRenderableWidget(Button.builder(Component.translatable("dynamiclantern.config.waist_items"), button -> {
+            Config.SPEC.save();
+            this.minecraft.setScreen(new WaistItemListScreen(this));
+        }).bounds(center - 155, y, 310, 20).build());
         y += 40;
         this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> {
             Config.SPEC.save();

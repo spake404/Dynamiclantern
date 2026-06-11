@@ -3,23 +3,21 @@ package org.com.dynamiclantern.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.com.dynamiclantern.Config;
-import org.com.dynamiclantern.CuriosLanternCache;
+import org.com.dynamiclantern.WaistItemCache;
+import org.com.dynamiclantern.WaistItemRules;
 import org.com.dynamiclantern.mixin.ModelPartAccessor;
 import org.joml.Quaternionf;
 import org.joml.Vector4f;
@@ -29,7 +27,7 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CurioLanternRenderer implements ICurioRenderer {
+public class CurioWaistItemRenderer implements ICurioRenderer {
     @Override
     public <T extends LivingEntity, M extends EntityModel<T>> void render(
             ItemStack stack,
@@ -45,12 +43,14 @@ public class CurioLanternRenderer implements ICurioRenderer {
             float netHeadYaw,
             float headPitch) {
         if (!Config.RENDER_WAIST_LANTERN.get()
+                || !WaistItemRules.isBeltSlot(slotContext)
+                || !WaistItemRules.isConfiguredWaistItem(stack)
                 || !(slotContext.entity() instanceof Player player)
                 || !(parent.getModel() instanceof PlayerModel<?> playerModel)) {
             return;
         }
 
-        CuriosLanternCache.remember(player, stack);
+        WaistItemCache.remember(player, stack);
         poseStack.pushPose();
 
         boolean armored = hasTorsoOrLegArmor(player);
@@ -71,13 +71,7 @@ public class CurioLanternRenderer implements ICurioRenderer {
         poseStack.mulPose(new Quaternionf().rotationZYX((float) swing.x, 0.0F, pitch));
         poseStack.translate(-0.5F, -lanternTop, -0.5F);
 
-        Block block = Block.byItem(stack.getItem());
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                block.defaultBlockState(),
-                poseStack,
-                buffers,
-                packedLight,
-                OverlayTexture.NO_OVERLAY);
+        WaistItemModelRenderer.render(stack, poseStack, buffers, packedLight);
 
         poseStack.popPose();
     }
