@@ -6,6 +6,7 @@
 
 - Fixed duplicate waist lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
 - Kept Dynamic Lantern in charge of lantern rendering while preserving EpicFightCuriosCompat behavior for other Curios items such as backpacks.
+- Documented and retained the waist display whitelist, allowing player-configured blocks or items to render as waist lanterns.
 - Reduced Curios belt inventory scans by sharing cached waist item and shader-light item lookups.
 - Cached waist item rule resolution and player body bounds used by the renderer.
 - Avoided registering Cold Sweat server event hooks when Cold Sweat is not installed.
@@ -16,6 +17,7 @@
 
 - 修复同时安装 EpicFightCuriosCompat 和 Dynamic Lantern 时腰间灯笼重复渲染的问题。
 - 灯笼渲染由 Dynamic Lantern 接管，同时保留 EpicFightCuriosCompat 对背包等其他 Curios 物品的兼容逻辑。
+- 补充并保留腰间显示白名单说明，玩家配置的方块或物品可以作为腰间灯笼渲染。
 - 复用腰间物品和 shader 光源物品缓存，减少 Curios 腰带槽位扫描次数。
 - 缓存腰间物品规则解析结果，以及渲染器使用的玩家身体模型边界。
 - 未安装 Cold Sweat 时不再注册对应的服务器事件兼容逻辑。
