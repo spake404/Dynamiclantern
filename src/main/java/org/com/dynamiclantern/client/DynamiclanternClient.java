@@ -1,25 +1,62 @@
 package org.com.dynamiclantern.client;
 
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import org.com.dynamiclantern.WaistItemRules;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
+import top.theillusivec4.curios.api.client.ICurioRenderer;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public final class DynamiclanternClient {
+    private static final Set<Item> REGISTERED_RENDERERS = new HashSet<>();
+
     private DynamiclanternClient() {
     }
 
     public static void init() {
-        if (ModList.get().isLoaded("epicfight")) {
-            CuriosRendererRegistry.register(Items.LANTERN, EpicFightCurioLanternRenderer::new);
-            CuriosRendererRegistry.register(Items.SOUL_LANTERN, EpicFightCurioLanternRenderer::new);
-        } else {
-            CuriosRendererRegistry.register(Items.LANTERN, CurioLanternRenderer::new);
-            CuriosRendererRegistry.register(Items.SOUL_LANTERN, CurioLanternRenderer::new);
-        }
+        registerConfiguredRenderers();
     }
 
     public static IConfigScreenFactory configScreenFactory() {
         return (container, parent) -> new DynamiclanternConfigScreen(parent);
+    }
+
+    public static void registerOptionalModListeners(IEventBus modEventBus) {
+        if (ModList.get().isLoaded("epicfight")) {
+            EpicFightWaistItemLayer.register(modEventBus);
+        }
+    }
+
+    public static void registerConfiguredRenderers() {
+        boolean changed = false;
+        for (Item item : WaistItemRules.getRenderableItems()) {
+            changed |= registerRenderer(item);
+        }
+        if (changed) {
+            CuriosRendererRegistry.load();
+        }
+    }
+
+    public static void registerConfiguredRenderer(Item item) {
+        if (registerRenderer(item)) {
+            CuriosRendererRegistry.load();
+        }
+    }
+
+    private static boolean registerRenderer(Item item) {
+        if (!REGISTERED_RENDERERS.add(item)) {
+            return false;
+        }
+
+        CuriosRendererRegistry.register(item, DynamiclanternClient::createRenderer);
+        return true;
+    }
+
+    private static ICurioRenderer createRenderer() {
+        return new CurioWaistItemRenderer();
     }
 }

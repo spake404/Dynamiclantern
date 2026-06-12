@@ -1,9 +1,17 @@
 {
   "dynamiclantern.config.title": "动态灯笼",
-  "dynamiclantern.config.render": "渲染灯笼",
-  "dynamiclantern.config.physics": "物理摆动",
-  "dynamiclantern.config.shader": "光影照明",
-  "dynamiclantern.config.left_side": "左侧佩戴",
-  "dynamiclantern.config.back": "背后位置",
-  "dynamiclantern.config.bounciness": "摆动幅度"
+  "dynamiclantern.config.render": "腰间渲染",
+  "dynamiclantern.config.physics": "摆动物理",
+  "dynamiclantern.config.shader": "Curios 灯笼发光",
+  "dynamiclantern.config.left_side": "左侧悬挂",
+  "dynamiclantern.config.back": "靠后位置",
+  "dynamiclantern.config.bounciness": "摆动强度",
+  "dynamiclantern.config.waist_items": "腰间显示物品",
+  "dynamiclantern.config.waist_items.title": "腰间显示物品",
+  "dynamiclantern.config.waist_items.input": "物品 ID",
+  "dynamiclantern.config.waist_items.add": "添加",
+  "dynamiclantern.config.waist_items.remove": "删除",
+  "dynamiclantern.config.waist_items.invalid": "无效的物品 ID",
+  "dynamiclantern.config.waist_items.added": "已添加 %s",
+  "dynamiclantern.config.waist_items.removed": "已删除 %s"
 }

@@ -18,14 +18,19 @@ public class DynamiclanternConfigScreen extends Screen {
     protected void init() {
         int center = this.width / 2;
         int y = 48;
-        addToggle(center - 155, y, "dynamiclantern.config.render", Config.RENDER_WAIST_LANTERN.get(), Config.RENDER_WAIST_LANTERN::set);
-        addToggle(center + 5, y, "dynamiclantern.config.physics", Config.ENABLE_PHYSICS.get(), Config.ENABLE_PHYSICS::set);
+        addToggle(center - 155, y, "dynamiclantern.config.render", Config.RENDER_WAIST_LANTERN.get(), value -> Config.RENDER_WAIST_LANTERN.set(value));
+        addToggle(center + 5, y, "dynamiclantern.config.physics", Config.ENABLE_PHYSICS.get(), value -> Config.ENABLE_PHYSICS.set(value));
         y += 26;
-        addToggle(center - 155, y, "dynamiclantern.config.shader", Config.SHADER_OFFHAND_OVERRIDE.get(), Config.SHADER_OFFHAND_OVERRIDE::set);
-        addToggle(center + 5, y, "dynamiclantern.config.left_side", Config.LEFT_SIDE.get(), Config.LEFT_SIDE::set);
+        addToggle(center - 155, y, "dynamiclantern.config.shader", Config.SHADER_OFFHAND_OVERRIDE.get(), value -> Config.SHADER_OFFHAND_OVERRIDE.set(value));
+        addToggle(center + 5, y, "dynamiclantern.config.left_side", Config.LEFT_SIDE.get(), value -> Config.LEFT_SIDE.set(value));
         y += 26;
-        addToggle(center - 155, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), Config.BACK_LANTERN::set);
+        addToggle(center - 155, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), value -> Config.BACK_LANTERN.set(value));
         addBounciness(center + 5, y);
+        y += 26;
+        this.addRenderableWidget(Button.builder(Component.translatable("dynamiclantern.config.waist_items"), button -> {
+            Config.SPEC.save();
+            this.minecraft.setScreen(new WaistItemListScreen(this));
+        }).bounds(center - 155, y, 310, 20).build());
         y += 40;
         this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> {
             Config.SPEC.save();

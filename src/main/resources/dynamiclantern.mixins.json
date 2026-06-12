@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "org.com.dynamiclantern.foundation.DynamiclanternMixinPlugin",
   "mixins": [
-    "IrisIdMapUniformsMixin",
-    "ModelPartAccessor"
   ],
   "client": [
+    "IrisIdMapUniformsMixin",
+    "EpicFightCuriosCompatSlotRuleMixin",
+    "CuriosSyncRenderMixin",
+    "ModelPartAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

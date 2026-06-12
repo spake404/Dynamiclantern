@@ -2,6 +2,8 @@ package org.com.dynamiclantern;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.List;
+
 public final class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -21,8 +23,14 @@ public final class Config {
             .comment("Render the lantern closer to the back of the waist.")
             .define("backLantern", false);
     public static final ModConfigSpec.BooleanValue SHADER_OFFHAND_OVERRIDE = BUILDER
-            .comment("Make Iris/Oculus see a Curios lantern as the offhand item for shader held-item lighting.")
+            .comment("Make Iris/Oculus see a Curios belt light-emitting block item as the offhand item for shader held-item lighting.")
             .define("shaderOffhandOverride", true);
+    public static final ModConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = BUILDER
+            .comment("Log Cold Sweat Soulspring Lamp Curios compatibility diagnostics while the lamp is equipped.")
+            .define("soulspringLampDebugLog", false);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> WAIST_RENDERABLE_ITEMS = BUILDER
+            .comment("Additional item ids that Dynamic Lantern is allowed to render on the Curios belt slot.")
+            .defineList("waistRenderableItems", List.of(), value -> value instanceof String);
 
     public static final ModConfigSpec SPEC = BUILDER.build();
 
