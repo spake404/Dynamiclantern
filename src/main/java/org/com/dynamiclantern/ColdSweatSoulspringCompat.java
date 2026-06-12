@@ -1,16 +1,15 @@
 package org.com.dynamiclantern;
 
-import net.minecraft.core.component.DataComponents;
+import com.momosoftworks.coldsweat.common.item.SoulspringLampItem;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -25,8 +24,6 @@ import java.util.Optional;
 
 public final class ColdSweatSoulspringCompat {
     private static final ResourceLocation SOULSPRING_LAMP_ID = Objects.requireNonNull(ResourceLocation.tryParse("cold_sweat:soulspring_lamp"));
-    private static final String FUEL_TAG = "Fuel";
-    private static final String LIT_TAG = "Lit";
     private static final String SOUL_SUCKED_TAG = "SoulSucked";
     private static final double MAX_FUEL = 64.0D;
     private static final int DIAGNOSTIC_INTERVAL_TICKS = 100;
@@ -103,13 +100,13 @@ public final class ColdSweatSoulspringCompat {
         LivingEntity target = event.getEntity();
         ItemStack lamp = result.get().stack();
         if (getFuel(lamp) >= MAX_FUEL
-                || target.isInvertedHealAndHarm()
+                || target.getType().is(EntityTypeTags.UNDEAD)
                 || target.getPersistentData().getBoolean(SOUL_SUCKED_TAG)) {
             return;
         }
 
         target.getPersistentData().putBoolean(SOUL_SUCKED_TAG, true);
-        double fuelGained = Math.min(8.0F, target.getMaxHealth() / 2.0F);
+        double fuelGained = (int) Math.min(8.0F, target.getMaxHealth() / 2.0F);
         addFuel(lamp, fuelGained);
 
         float originalAmount = event.getAmount();
@@ -142,19 +139,15 @@ public final class ColdSweatSoulspringCompat {
     }
 
     private static boolean isLit(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        return data != null && data.copyTag().getBoolean(LIT_TAG);
+        return SoulspringLampItem.isLit(stack);
     }
 
     private static double getFuel(ItemStack stack) {
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        return data == null ? 0.0D : data.copyTag().getDouble(FUEL_TAG);
+        return SoulspringLampItem.getFuel(stack);
     }
 
     private static void addFuel(ItemStack stack, double amount) {
-        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-        tag.putDouble(FUEL_TAG, Math.min(MAX_FUEL, getFuel(stack) + amount));
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        SoulspringLampItem.addFuel(stack, amount);
     }
 
     private static boolean isDebugLogEnabled() {

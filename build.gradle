@@ -108,6 +108,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    implementation "curse.maven:cold-sweat-506194:6681374"
     compileOnly "curse.maven:epic-fight-mod-405076:8080214"
     runtimeOnly "curse.maven:epic-fight-mod-405076:8080214"
     compileOnly "curse.maven:irisshaders-455508:6661598"
