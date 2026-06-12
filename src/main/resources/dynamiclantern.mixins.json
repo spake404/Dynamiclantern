@@ -10,6 +10,7 @@
   "client": [
     "IrisIdMapUniformsMixin",
     "EpicFightCuriosCompatSlotRuleMixin",
+    "CuriosSyncRenderMixin",
     "ModelPartAccessor"
   ],
   "injectors": {

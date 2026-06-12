@@ -155,6 +155,10 @@ public final class WaistItemRules {
         return slotContext != null && BELT_SLOT.equals(slotContext.identifier());
     }
 
+    public static boolean isVisibleBeltSlot(SlotContext slotContext) {
+        return isBeltSlot(slotContext) && slotContext.visible();
+    }
+
     public static boolean canEquipInBelt(ItemStack stack, SlotContext slotContext) {
         return isBeltSlot(slotContext) && isRenderableWaistItem(stack);
     }

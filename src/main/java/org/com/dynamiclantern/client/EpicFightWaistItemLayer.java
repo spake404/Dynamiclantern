@@ -17,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.com.dynamiclantern.Config;
 import org.com.dynamiclantern.WaistItemCache;
-import org.com.dynamiclantern.WaistItemRules;
-import top.theillusivec4.curios.api.SlotContext;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 import yesman.epicfight.api.model.Armature;
@@ -84,11 +82,12 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
             return;
         }
 
-        ItemStack stack = WaistItemCache.getOrRefresh(player);
-        if (stack.isEmpty()) {
+        WaistItemCache.CachedItem cachedItem = WaistItemCache.getVisibleWaistItemOrRefresh(player);
+        if (cachedItem.isEmpty()) {
             return;
         }
 
+        ItemStack stack = cachedItem.stack();
         poseStack.pushPose();
         applyRuleTransform(poseStack, entityPatch, poses, BELT_LANTERN_RULE, player);
 
@@ -98,7 +97,7 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
             float headYaw = Mth.rotLerp(partialTicks, player.yHeadRotO, player.getYHeadRot());
             WAIST_RENDERER.render(
                     stack,
-                    beltSlotContext(player),
+                    cachedItem.slotContext(),
                     poseStack,
                     parent,
                     buffers,
@@ -114,10 +113,6 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
         }
 
         poseStack.popPose();
-    }
-
-    private static SlotContext beltSlotContext(Player player) {
-        return new SlotContext(WaistItemRules.BELT_SLOT, player, 0, false, true);
     }
 
     private static void applyRuleTransform(

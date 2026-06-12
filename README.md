@@ -17,6 +17,7 @@ Dynamic Lantern is a Forge 1.20.1 mod that renders supported Curios belt items a
 - Includes built-in shader lighting support for `cold_sweat:soulspring_lamp`, mapped as a soul lantern for shader held-item IDs.
 - Includes internal Epic Fight model positioning, so EpicFightCuriosCompat is not required for the lantern position.
 - Avoids duplicate lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
+- Honors the Curios render visibility toggle, hiding both the waist model and shader held-item lighting when the slot display is disabled.
 - Keeps Curios scans and optional compatibility hooks cached where possible to reduce render-thread and server-thread overhead.
 - Does not add a dynamic light source.
 
@@ -83,6 +84,7 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 - 内置支持 `cold_sweat:soulspring_lamp` 的 shader 发光识别，并按灵魂灯笼交给光影处理。
 - 内置 Epic Fight 模型定位，不再依赖 EpicFightCuriosCompat 来修正灯笼位置。
 - 与 EpicFightCuriosCompat 同时安装时，会避免灯笼重复渲染。
+- 遵守 Curios 的显示开关；关闭槽位显示时，腰间模型和 shader held-item lighting 都会一起关闭。
 - 尽量缓存 Curios 扫描和可选兼容逻辑，降低渲染线程和服务器线程上的额外开销。
 - 本模组不添加动态光源。
 
@@ -138,6 +140,6 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 
 ## Version / 版本
 
-Current version / 当前版本：`1.5.1`
+Current version / 当前版本：`1.5.5`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

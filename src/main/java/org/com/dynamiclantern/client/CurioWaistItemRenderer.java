@@ -45,7 +45,7 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             float netHeadYaw,
             float headPitch) {
         if (!Config.RENDER_WAIST_LANTERN.get()
-                || !WaistItemRules.isBeltSlot(slotContext)
+                || !WaistItemRules.isVisibleBeltSlot(slotContext)
                 || !WaistItemRules.isRenderableWaistItem(stack)
                 || !(slotContext.entity() instanceof Player player)
                 || !(parent.getModel() instanceof PlayerModel<?> playerModel)) {
@@ -55,7 +55,7 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             return;
         }
 
-        WaistItemCache.remember(player, stack);
+        WaistItemCache.remember(player, slotContext, stack);
         poseStack.pushPose();
 
         boolean armored = hasTorsoOrLegArmor(player);

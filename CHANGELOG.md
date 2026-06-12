@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.5.5 - 2026-06-12
+
+### English
+
+- Fixed Curios render visibility handling for waist lanterns.
+- Hiding a belt slot in Curios now hides Dynamic Lantern's waist model in both vanilla and Epic Fight rendering paths.
+- Shader held-item lighting now stops when the Curios belt slot display is disabled.
+- Replaced per-tick cache refresh with event-driven cache invalidation from Curios render-sync packets.
+- Kept cached Curios lookups for normal rendering and shader lighting without ignoring visibility changes.
+- Updated README and changelog for the 1.5.5 release.
+
+### 中文
+
+- 修复 Curios 显示开关对腰间灯笼不生效的问题。
+- 在 Curios 中关闭腰带槽位显示后，原版模型和 Epic Fight 模型路径下的腰间灯笼都会隐藏。
+- 关闭 Curios 显示后，shader held-item lighting 也会同步停止。
+- 移除按玩家 tick 刷新缓存的方案，改为 Curios 渲染显示同步包触发缓存失效。
+- 保留正常渲染和 shader 光照的 Curios 缓存，同时不再忽略显示状态变化。
+- 更新 1.5.5 版本的中英双语 README 和 CHANGELOG。
+
 ## 1.5.1 - 2026-06-12
 
 ### English
