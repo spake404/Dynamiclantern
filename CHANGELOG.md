@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.5.6 - 2026-06-12
+
+### English
+
+- Added a Dynamic Lantern Curios belt validator for configured waist display items.
+- Newly added waist display items can now be equipped in the Curios Belt slot without leaving and re-entering the world.
+- Curios item tooltips now show the Belt slot immediately for player-configured waist display items.
+- Kept existing built-in belt item tags for vanilla lanterns and optional compatibility items.
+
+### 中文
+
+- 新增 Dynamic Lantern 自己的 Curios 腰带槽位 validator，用于玩家配置的腰间显示物品。
+- 新增到腰间显示名单的物品现在可以立刻放入 Curios Belt 槽位，不需要退出并重新进入世界。
+- 玩家配置的腰间显示物品现在会立刻在 Curios tooltip 中显示 Belt 槽位。
+- 保留原有的内置腰带物品 tag，用于原版灯笼和可选兼容物品。
+
 ## 1.5.5 - 2026-06-12
 
 ### English

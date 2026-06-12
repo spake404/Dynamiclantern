@@ -18,6 +18,7 @@ Dynamic Lantern is a Forge 1.20.1 mod that renders supported Curios belt items a
 - Includes internal Epic Fight model positioning, so EpicFightCuriosCompat is not required for the lantern position.
 - Avoids duplicate lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
 - Honors the Curios render visibility toggle, hiding both the waist model and shader held-item lighting when the slot display is disabled.
+- Adds Dynamic Lantern's own Curios belt validator, so newly configured waist items can be equipped and show the Belt tooltip without re-entering the world.
 - Keeps Curios scans and optional compatibility hooks cached where possible to reduce render-thread and server-thread overhead.
 - Does not add a dynamic light source.
 
@@ -32,6 +33,15 @@ The config screen only shows player-added item IDs. Built-in defaults are hidden
 - Skinned Lanterns lantern variants
 
 Optional item IDs are declared with `required: false`, so the game still loads normally when the optional mod is not installed.
+
+### Custom Waist Items
+
+Additional item IDs can be added from the Dynamic Lantern config screen. After an item is added:
+
+- It can render on the Curios belt slot.
+- Curios can recognize it as valid for the Belt slot through Dynamic Lantern's runtime validator.
+- The Curios item tooltip can show the Belt slot immediately, without requiring the player to leave and re-enter the world.
+- Light-emitting block items can participate in shader held-item lighting when equipped in Curios.
 
 ### Cold Sweat Soulspring Lamp
 
@@ -85,6 +95,7 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 - 内置 Epic Fight 模型定位，不再依赖 EpicFightCuriosCompat 来修正灯笼位置。
 - 与 EpicFightCuriosCompat 同时安装时，会避免灯笼重复渲染。
 - 遵守 Curios 的显示开关；关闭槽位显示时，腰间模型和 shader held-item lighting 都会一起关闭。
+- 添加 Dynamic Lantern 自己的 Curios 腰带槽位 validator，玩家新增的腰间显示物品可以立刻放入腰带槽位并显示 Belt tooltip，不需要重新进入世界。
 - 尽量缓存 Curios 扫描和可选兼容逻辑，降低渲染线程和服务器线程上的额外开销。
 - 本模组不添加动态光源。
 
@@ -99,6 +110,15 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 - Skinned Lanterns 的灯笼变体
 
 可选物品 ID 使用 `required: false` 声明，因此未安装对应模组时游戏也可以正常加载。
+
+### 自定义腰间物品
+
+可以从 Dynamic Lantern 设置界面添加额外物品 ID。添加后：
+
+- 该物品可以在 Curios 腰带槽位上渲染。
+- Curios 会通过 Dynamic Lantern 的运行时 validator 识别它可以放入 Belt 槽位。
+- 物品 tooltip 可以立刻显示 Belt 槽位，不再需要玩家退出并重新进入世界。
+- 如果它本身是会发光的方块物品，放在 Curios 腰带中时可以参与 shader held-item lighting。
 
 ### Cold Sweat Soulspring Lamp
 
@@ -140,6 +160,6 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 
 ## Version / 版本
 
-Current version / 当前版本：`1.5.5`
+Current version / 当前版本：`1.5.6`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
