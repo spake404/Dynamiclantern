@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.5.1 - 2026-06-12
+
+### English
+
+- Fixed duplicate waist lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
+- Kept Dynamic Lantern in charge of lantern rendering while preserving EpicFightCuriosCompat behavior for other Curios items such as backpacks.
+- Reduced Curios belt inventory scans by sharing cached waist item and shader-light item lookups.
+- Cached waist item rule resolution and player body bounds used by the renderer.
+- Avoided registering Cold Sweat server event hooks when Cold Sweat is not installed.
+- Reduced unnecessary NBT and registry lookups in hot paths.
+- Updated README and changelog for the 1.5.1 release.
+
+### 中文
+
+- 修复同时安装 EpicFightCuriosCompat 和 Dynamic Lantern 时腰间灯笼重复渲染的问题。
+- 灯笼渲染由 Dynamic Lantern 接管，同时保留 EpicFightCuriosCompat 对背包等其他 Curios 物品的兼容逻辑。
+- 复用腰间物品和 shader 光源物品缓存，减少 Curios 腰带槽位扫描次数。
+- 缓存腰间物品规则解析结果，以及渲染器使用的玩家身体模型边界。
+- 未安装 Cold Sweat 时不再注册对应的服务器事件兼容逻辑。
+- 减少热路径中的无用 NBT 和注册表查询。
+- 更新 1.5.1 版本的中英双语 README 和 CHANGELOG。
+
 ## 1.5.0 - 2026-06-12
 
 ### English

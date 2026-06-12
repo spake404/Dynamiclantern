@@ -8,7 +8,6 @@ import top.theillusivec4.curios.api.SlotResult;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 
 public final class WaistItemCache {
     private static final Map<UUID, ItemStack> WAIST_ITEMS = new ConcurrentHashMap<>();
@@ -36,20 +35,15 @@ public final class WaistItemCache {
     }
 
     public static void remember(Player player, ItemStack stack) {
-        WAIST_ITEMS.put(player.getUUID(), WaistItemRules.isRenderableWaistItem(stack) ? stack.copy() : ItemStack.EMPTY);
+        remember(WAIST_ITEMS, player.getUUID(), WaistItemRules.isRenderableWaistItem(stack) ? stack : ItemStack.EMPTY);
     }
 
     public static ItemStack refresh(Player player) {
-        ItemStack found = scan(player, WaistItemRules::isRenderableWaistItem);
-        remember(player, found);
-        refreshShaderLight(player);
-        return found;
+        return refreshAll(player).waistItem();
     }
 
     public static ItemStack refreshShaderLight(Player player) {
-        ItemStack found = scan(player, WaistItemRules::isShaderLightItem);
-        SHADER_LIGHT_ITEMS.put(player.getUUID(), found.isEmpty() ? ItemStack.EMPTY : found.copy());
-        return found;
+        return refreshAll(player).shaderLightItem();
     }
 
     public static void clear(Player player) {
@@ -62,14 +56,42 @@ public final class WaistItemCache {
         SHADER_LIGHT_ITEMS.clear();
     }
 
-    private static ItemStack scan(Player player, Predicate<ItemStack> predicate) {
-        return CuriosApi.getCuriosInventory(player)
-                .resolve()
-                .flatMap(handler -> handler.findCurios(WaistItemRules.BELT_SLOT)
-                        .stream()
-                        .map(SlotResult::stack)
-                        .filter(predicate)
-                        .findFirst())
-                .orElse(ItemStack.EMPTY);
+    private static CacheResult refreshAll(Player player) {
+        ItemStack waistItem = ItemStack.EMPTY;
+        ItemStack shaderLightItem = ItemStack.EMPTY;
+
+        var optionalHandler = CuriosApi.getCuriosInventory(player).resolve();
+        if (optionalHandler.isPresent()) {
+            for (SlotResult result : optionalHandler.get().findCurios(WaistItemRules.BELT_SLOT)) {
+                ItemStack stack = result.stack();
+                if (waistItem.isEmpty() && WaistItemRules.isRenderableWaistItem(stack)) {
+                    waistItem = stack;
+                }
+                if (shaderLightItem.isEmpty() && WaistItemRules.isShaderLightItem(stack)) {
+                    shaderLightItem = stack;
+                }
+                if (!waistItem.isEmpty() && !shaderLightItem.isEmpty()) {
+                    break;
+                }
+            }
+        }
+
+        UUID playerId = player.getUUID();
+        remember(WAIST_ITEMS, playerId, waistItem);
+        remember(SHADER_LIGHT_ITEMS, playerId, shaderLightItem);
+        return new CacheResult(waistItem, shaderLightItem);
+    }
+
+    private static void remember(Map<UUID, ItemStack> cache, UUID playerId, ItemStack stack) {
+        ItemStack value = stack.isEmpty() ? ItemStack.EMPTY : stack;
+        ItemStack cached = cache.get(playerId);
+        if (cached != null && ItemStack.matches(cached, value)) {
+            return;
+        }
+
+        cache.put(playerId, value.isEmpty() ? ItemStack.EMPTY : value.copy());
+    }
+
+    private record CacheResult(ItemStack waistItem, ItemStack shaderLightItem) {
     }
 }

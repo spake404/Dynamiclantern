@@ -168,6 +168,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:sophisticated-backpacks-422301:8206207")
     runtimeOnly fg.deobf("curse.maven:skinned-lanterns-414154:4656953")
     runtimeOnly fg.deobf("curse.maven:cold-sweat-506194:8170903")
+    runtimeOnly fg.deobf("curse.maven:epicfightcurioscompat-1389133:7866027")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

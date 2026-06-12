@@ -10,21 +10,27 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.IEventBus;
 import org.com.dynamiclantern.Config;
+import org.com.dynamiclantern.WaistItemCache;
 import org.com.dynamiclantern.WaistItemRules;
 import top.theillusivec4.curios.api.SlotContext;
-import top.theillusivec4.curios.client.render.CuriosLayer;
 import yesman.epicfight.api.animation.Joint;
+import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
-import yesman.epicfight.compat.CuriosCompat;
+import yesman.epicfight.client.renderer.patched.entity.PatchedEntityRenderer;
+import yesman.epicfight.client.renderer.patched.entity.PatchedLivingEntityRenderer;
+import yesman.epicfight.client.renderer.patched.layer.UniqueLayer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-public class EpicFightCurioWaistItemRenderer extends CurioWaistItemRenderer implements CuriosCompat.EpicFightCurioRenderer {
+public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEntityPatch<LivingEntity>, EntityModel<LivingEntity>> {
+    private static final CurioWaistItemRenderer WAIST_RENDERER = new CurioWaistItemRenderer();
     private static final float LEFT_SIDE_INSET_PIXELS = 2.0F / 16.0F;
     private static final SlotRule BELT_LANTERN_RULE = new SlotRule(
             "Hips",
@@ -41,39 +47,58 @@ public class EpicFightCurioWaistItemRenderer extends CurioWaistItemRenderer impl
             0.20F,
             0.0F,
             180.0F);
+    private static boolean registered;
+
+    public static void register(IEventBus modEventBus) {
+        if (!registered) {
+            registered = true;
+            modEventBus.addListener(EpicFightWaistItemLayer::onModifyPatchedRenderers);
+        }
+    }
+
+    private static void onModifyPatchedRenderers(PatchedRenderersEvent.Modify event) {
+        PatchedEntityRenderer renderer = event.get(EntityType.PLAYER);
+        if (renderer instanceof PatchedLivingEntityRenderer<?, ?, ?, ?, ?> livingRenderer) {
+            addLayer(livingRenderer);
+        }
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static void addLayer(PatchedLivingEntityRenderer renderer) {
+        renderer.addCustomLayer(new EpicFightWaistItemLayer());
+    }
 
     @Override
-    public void draw(
-            ItemStack stack,
-            SlotContext slotContext,
+    protected void renderLayer(
             LivingEntityPatch<LivingEntity> entityPatch,
             LivingEntity entity,
-            CuriosLayer<LivingEntity, net.minecraft.client.model.EntityModel<LivingEntity>> vanillaLayer,
             PoseStack poseStack,
             MultiBufferSource buffers,
             int packedLight,
             OpenMatrix4f[] poses,
-            float limbSwing,
-            float limbSwingAmount,
-            float ageInTicks,
+            float bob,
+            float yRot,
+            float xRot,
             float partialTicks) {
-        if (!Config.RENDER_WAIST_LANTERN.get()
-                || !WaistItemRules.isBeltSlot(slotContext)
-                || !WaistItemRules.isRenderableWaistItem(stack)
-                || !(entity instanceof Player player)) {
+        if (!Config.RENDER_WAIST_LANTERN.get() || !(entity instanceof Player player)) {
+            return;
+        }
+
+        ItemStack stack = WaistItemCache.getOrRefresh(player);
+        if (stack.isEmpty()) {
             return;
         }
 
         poseStack.pushPose();
-
         applyRuleTransform(poseStack, entityPatch, poses, BELT_LANTERN_RULE, player);
+
         RenderLayerParent<LivingEntity, EntityModel<LivingEntity>> parent = getParentRenderer(player);
         if (parent != null) {
             float bodyYaw = Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot);
             float headYaw = Mth.rotLerp(partialTicks, player.yHeadRotO, player.getYHeadRot());
-            super.render(
+            WAIST_RENDERER.render(
                     stack,
-                    slotContext,
+                    beltSlotContext(player),
                     poseStack,
                     parent,
                     buffers,
@@ -89,6 +114,10 @@ public class EpicFightCurioWaistItemRenderer extends CurioWaistItemRenderer impl
         }
 
         poseStack.popPose();
+    }
+
+    private static SlotContext beltSlotContext(Player player) {
+        return new SlotContext(WaistItemRules.BELT_SLOT, player, 0, false, true);
     }
 
     private static void applyRuleTransform(

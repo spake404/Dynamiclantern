@@ -141,10 +141,12 @@ public final class WaistItemRules {
     public static final List<String> BUILT_IN_SHADER_LIGHT_ITEM_IDS = List.of(
             COLD_SWEAT_SOULSPRING_LAMP_ID);
     private static final Set<String> BUILT_IN_DEFAULT_ITEM_ID_SET = Set.copyOf(BUILT_IN_DEFAULT_ITEM_IDS);
-    private static final Set<String> BUILT_IN_SHADER_LIGHT_ITEM_ID_SET = Set.copyOf(BUILT_IN_SHADER_LIGHT_ITEM_IDS);
 
-    private static volatile List<String> cachedIds = List.of();
-    private static volatile Set<Item> cachedItems = Set.of();
+    private static volatile boolean cacheValid;
+    private static volatile Set<Item> cachedConfiguredItems = Set.of();
+    private static volatile Set<Item> cachedRenderableItems = Set.of();
+    private static volatile Set<Item> cachedBuiltInShaderLightItems = Set.of();
+    private static volatile Item cachedColdSweatSoulspringLampItem = Items.AIR;
 
     private WaistItemRules() {
     }
@@ -166,7 +168,7 @@ public final class WaistItemRules {
     }
 
     public static boolean isShaderLightItem(ItemStack stack) {
-        return !stack.isEmpty() && (isLightEmittingBlockItem(stack) || isBuiltInShaderLightItem(stack));
+        return !stack.isEmpty() && (isBuiltInShaderLightItem(stack) || isLightEmittingBlockItem(stack));
     }
 
     public static ItemStack shaderLightStack(ItemStack stack) {
@@ -210,7 +212,7 @@ public final class WaistItemRules {
         }
 
         ResourceLocation location = ResourceLocation.tryParse(id);
-        if (location == null || !ForgeRegistries.ITEMS.containsKey(location)) {
+        if (location == null) {
             return Optional.empty();
         }
 
@@ -249,8 +251,11 @@ public final class WaistItemRules {
     }
 
     public static void invalidate() {
-        cachedIds = List.of();
-        cachedItems = Set.of();
+        cacheValid = false;
+        cachedConfiguredItems = Set.of();
+        cachedRenderableItems = Set.of();
+        cachedBuiltInShaderLightItems = Set.of();
+        cachedColdSweatSoulspringLampItem = Items.AIR;
     }
 
     public static boolean isLightEmittingBlockItem(ItemStack stack) {
@@ -259,7 +264,7 @@ public final class WaistItemRules {
     }
 
     public static boolean isColdSweatSoulspringLamp(ItemStack stack) {
-        return !stack.isEmpty() && COLD_SWEAT_SOULSPRING_LAMP_ID.equals(itemId(stack.getItem()));
+        return !stack.isEmpty() && stack.getItem() == coldSweatSoulspringLampItem();
     }
 
     private static void setConfiguredItemIds(Collection<String> ids) {
@@ -269,22 +274,46 @@ public final class WaistItemRules {
     }
 
     private static Set<Item> configuredItems() {
-        List<String> ids = getConfiguredItemIds();
-        return resolveItems(ids);
+        ensureCaches();
+        return cachedConfiguredItems;
     }
 
     private static Set<Item> renderableItems() {
-        List<String> ids = getRenderableItemIds();
-        if (!ids.equals(cachedIds)) {
-            synchronized (WaistItemRules.class) {
-                if (!ids.equals(cachedIds)) {
-                    Set<Item> items = resolveItems(ids);
-                    cachedIds = ids;
-                    cachedItems = items;
-                }
-            }
+        ensureCaches();
+        return cachedRenderableItems;
+    }
+
+    private static Set<Item> builtInShaderLightItems() {
+        ensureCaches();
+        return cachedBuiltInShaderLightItems;
+    }
+
+    private static Item coldSweatSoulspringLampItem() {
+        ensureCaches();
+        return cachedColdSweatSoulspringLampItem;
+    }
+
+    private static void ensureCaches() {
+        if (cacheValid) {
+            return;
         }
-        return cachedItems;
+
+        synchronized (WaistItemRules.class) {
+            if (cacheValid) {
+                return;
+            }
+
+            List<String> configuredIds = getConfiguredItemIds();
+            Set<Item> configuredItems = resolveItems(configuredIds);
+            Set<Item> renderableItems = new HashSet<>(resolveItems(BUILT_IN_DEFAULT_ITEM_IDS));
+            renderableItems.addAll(configuredItems);
+
+            cachedConfiguredItems = Set.copyOf(configuredItems);
+            cachedRenderableItems = Set.copyOf(renderableItems);
+            cachedBuiltInShaderLightItems = resolveItems(BUILT_IN_SHADER_LIGHT_ITEM_IDS);
+            cachedColdSweatSoulspringLampItem = resolveItem(COLD_SWEAT_SOULSPRING_LAMP_ID).orElse(Items.AIR);
+            cacheValid = true;
+        }
     }
 
     private static Set<Item> resolveItems(Collection<String> ids) {
@@ -300,7 +329,7 @@ public final class WaistItemRules {
     }
 
     private static boolean isBuiltInShaderLightItem(ItemStack stack) {
-        return !stack.isEmpty() && BUILT_IN_SHADER_LIGHT_ITEM_ID_SET.contains(itemId(stack.getItem()));
+        return !stack.isEmpty() && builtInShaderLightItems().contains(stack.getItem());
     }
 
     private static List<String> normalizeIds(Collection<? extends String> ids) {

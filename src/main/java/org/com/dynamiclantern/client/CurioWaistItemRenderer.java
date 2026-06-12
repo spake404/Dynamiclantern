@@ -1,7 +1,6 @@
 package org.com.dynamiclantern.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
@@ -24,10 +23,13 @@ import org.joml.Vector4f;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class CurioWaistItemRenderer implements ICurioRenderer {
+    private static final Map<ModelPart, Bounds> BODY_BOUNDS = Collections.synchronizedMap(new WeakHashMap<>());
+
     @Override
     public <T extends LivingEntity, M extends EntityModel<T>> void render(
             ItemStack stack,
@@ -47,6 +49,9 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
                 || !WaistItemRules.isRenderableWaistItem(stack)
                 || !(slotContext.entity() instanceof Player player)
                 || !(parent.getModel() instanceof PlayerModel<?> playerModel)) {
+            return;
+        }
+        if (EpicFightCuriosFallbackGuard.isSuppressedLayerCall()) {
             return;
         }
 
@@ -99,51 +104,72 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
 
     private static void attachToBody(PoseStack poseStack, ModelPart body, Vec3 anchor) {
         body.translateAndRotate(poseStack);
-        Pair<Vec3, Vec3> bounds = measure(body);
+        Bounds bounds = bounds(body);
         poseStack.scale(1.0F / 16.0F, 1.0F / 16.0F, 1.0F / 16.0F);
         poseStack.translate(
-                Mth.lerp((-anchor.x + 1.0D) / 2.0D, bounds.getFirst().x, bounds.getSecond().x),
-                Mth.lerp((-anchor.y + 1.0D) / 2.0D, bounds.getFirst().y, bounds.getSecond().y),
-                Mth.lerp((-anchor.z + 1.0D) / 2.0D, bounds.getFirst().z, bounds.getSecond().z));
+                Mth.lerp((-anchor.x + 1.0D) / 2.0D, bounds.minX, bounds.maxX),
+                Mth.lerp((-anchor.y + 1.0D) / 2.0D, bounds.minY, bounds.maxY),
+                Mth.lerp((-anchor.z + 1.0D) / 2.0D, bounds.minZ, bounds.maxZ));
         poseStack.scale(8.0F, 8.0F, 8.0F);
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
     }
 
-    private static Pair<Vec3, Vec3> measure(ModelPart body) {
-        Vec3 min = Vec3.ZERO;
-        Vec3 max = Vec3.ZERO;
-        List<ModelPart> parts = new ArrayList<>();
-        parts.add(body);
-
-        if (body.getClass().getSimpleName().contains("EMFModelPart")) {
-            parts.addAll(((ModelPartAccessor) (Object) body).dynamiclantern$getChildren().values());
+    private static Bounds bounds(ModelPart body) {
+        synchronized (BODY_BOUNDS) {
+            return BODY_BOUNDS.computeIfAbsent(body, CurioWaistItemRenderer::measure);
         }
+    }
 
-        for (ModelPart part : parts) {
-            for (ModelPart.Cube cube : ((ModelPartAccessor) (Object) part).dynamiclantern$getCubes()) {
-                min = new Vec3(
-                        Math.min(min.x, Math.min(cube.minX + part.x, cube.maxX + part.x)),
-                        Math.min(min.y, Math.min(cube.minY + part.y, cube.maxY + part.y)),
-                        Math.min(min.z, Math.min(cube.minZ + part.z, cube.maxZ + part.z)));
-                max = new Vec3(
-                        Math.max(max.x, Math.max(cube.minX + part.x, cube.maxX + part.x)),
-                        Math.max(max.y, Math.max(cube.minY + part.y, cube.maxY + part.y)),
-                        Math.max(max.z, Math.max(cube.minZ + part.z, cube.maxZ + part.z)));
+    private static Bounds measure(ModelPart body) {
+        BoundsAccumulator bounds = new BoundsAccumulator();
+        measurePart(body, bounds);
+        if (body.getClass().getSimpleName().contains("EMFModelPart")) {
+            for (ModelPart child : ((ModelPartAccessor) (Object) body).dynamiclantern$getChildren().values()) {
+                measurePart(child, bounds);
             }
         }
 
-        return Pair.of(min, max);
+        return bounds.toBounds();
+    }
+
+    private static void measurePart(ModelPart part, BoundsAccumulator bounds) {
+        for (ModelPart.Cube cube : ((ModelPartAccessor) (Object) part).dynamiclantern$getCubes()) {
+            bounds.include(cube.minX + part.x, cube.minY + part.y, cube.minZ + part.z);
+            bounds.include(cube.maxX + part.x, cube.maxY + part.y, cube.maxZ + part.z);
+        }
     }
 
     private static boolean hasTorsoOrLegArmor(Player player) {
-        for (ItemStack armor : player.getArmorSlots()) {
-            if (armor.getItem() instanceof ArmorItem armorItem) {
-                EquipmentSlot slot = armorItem.getEquipmentSlot();
-                if (slot == EquipmentSlot.CHEST || slot == EquipmentSlot.LEGS) {
-                    return true;
-                }
-            }
+        return hasArmorInSlot(player.getItemBySlot(EquipmentSlot.CHEST), EquipmentSlot.CHEST)
+                || hasArmorInSlot(player.getItemBySlot(EquipmentSlot.LEGS), EquipmentSlot.LEGS);
+    }
+
+    private static boolean hasArmorInSlot(ItemStack stack, EquipmentSlot slot) {
+        return stack.getItem() instanceof ArmorItem armorItem && armorItem.getEquipmentSlot() == slot;
+    }
+
+    private record Bounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+    }
+
+    private static final class BoundsAccumulator {
+        private double minX;
+        private double minY;
+        private double minZ;
+        private double maxX;
+        private double maxY;
+        private double maxZ;
+
+        private void include(double x, double y, double z) {
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            minZ = Math.min(minZ, z);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+            maxZ = Math.max(maxZ, z);
         }
-        return false;
+
+        private Bounds toBounds() {
+            return new Bounds(minX, minY, minZ, maxX, maxY, maxZ);
+        }
     }
 }

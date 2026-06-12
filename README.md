@@ -16,6 +16,8 @@ Dynamic Lantern is a Forge 1.20.1 mod that renders supported Curios belt items a
 - Lets Iris/Oculus shader held-item lighting use Curios belt items that are light-emitting block items, even when they are not in the user whitelist.
 - Includes built-in shader lighting support for `cold_sweat:soulspring_lamp`, mapped as a soul lantern for shader held-item IDs.
 - Includes internal Epic Fight model positioning, so EpicFightCuriosCompat is not required for the lantern position.
+- Avoids duplicate lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
+- Keeps Curios scans and optional compatibility hooks cached where possible to reduce render-thread and server-thread overhead.
 - Does not add a dynamic light source.
 
 ### Built-In Defaults
@@ -63,6 +65,7 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 
 - Oculus / Iris-compatible shader pipeline for held-item shader lighting
 - Epic Fight
+- EpicFightCuriosCompat, with Dynamic Lantern taking over lantern rendering while leaving other Curios compatibility behavior intact
 - Cold Sweat
 - Under the Moon
 - Skinned Lanterns
@@ -79,6 +82,8 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 - Iris/Oculus 的 shader held-item lighting 可以识别 Curios 腰带中的发光方块物品，即使该物品没有加入玩家自定义白名单。
 - 内置支持 `cold_sweat:soulspring_lamp` 的 shader 发光识别，并按灵魂灯笼交给光影处理。
 - 内置 Epic Fight 模型定位，不再依赖 EpicFightCuriosCompat 来修正灯笼位置。
+- 与 EpicFightCuriosCompat 同时安装时，会避免灯笼重复渲染。
+- 尽量缓存 Curios 扫描和可选兼容逻辑，降低渲染线程和服务器线程上的额外开销。
 - 本模组不添加动态光源。
 
 ### 内置默认物品
@@ -126,12 +131,13 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 
 - Oculus / Iris 兼容光影管线，用于 shader held-item lighting
 - Epic Fight
+- EpicFightCuriosCompat，灯笼渲染由 Dynamic Lantern 接管，其他 Curios 兼容逻辑保持不变
 - Cold Sweat
 - Under the Moon
 - Skinned Lanterns
 
 ## Version / 版本
 
-Current version / 当前版本：`1.5.0`
+Current version / 当前版本：`1.5.1`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

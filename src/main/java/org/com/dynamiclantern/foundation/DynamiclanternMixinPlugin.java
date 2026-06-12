@@ -25,6 +25,9 @@ public class DynamiclanternMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.endsWith("IrisIdMapUniformsMixin")) {
             return isModLoaded("iris") || isModLoaded("oculus");
         }
+        if (mixinClassName.endsWith("EpicFightCuriosCompatSlotRuleMixin")) {
+            return isModLoaded("epicfight_curios_compat");
+        }
         return true;
     }
 
