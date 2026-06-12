@@ -28,6 +28,9 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = BUILDER
             .comment("Log Cold Sweat Soulspring Lamp Curios compatibility diagnostics while the lamp is equipped.")
             .define("soulspringLampDebugLog", false);
+    public static final ModConfigSpec.BooleanValue RENDER_DIAGNOSTIC_LOG = BUILDER
+            .comment("Log Dynamic Lantern render diagnostics. Disabled by default because it can be noisy during normal gameplay.")
+            .define("renderDiagnosticLog", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> WAIST_RENDERABLE_ITEMS = BUILDER
             .comment("Additional item ids that Dynamic Lantern is allowed to render on the Curios belt slot.")
             .defineList("waistRenderableItems", List.of(), value -> value instanceof String);

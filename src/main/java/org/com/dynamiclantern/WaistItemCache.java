@@ -78,6 +78,17 @@ public final class WaistItemCache {
                 }
 
                 ItemStack stack = result.stack();
+                if (Diagnostics.isInteresting(stack)) {
+                    Diagnostics.log(
+                            "cache-scan-" + player.getUUID(),
+                            "cache scan player={}, item={}, slot={}, visibleBelt={}, renderable={}, shaderLight={}",
+                            Diagnostics.playerName(player),
+                            Diagnostics.itemId(stack),
+                            Diagnostics.slot(result.slotContext()),
+                            WaistItemRules.isVisibleBeltSlot(result.slotContext()),
+                            WaistItemRules.isRenderableWaistItem(stack),
+                            WaistItemRules.isShaderLightItem(stack));
+                }
                 if (waistItem.isEmpty() && WaistItemRules.isRenderableWaistItem(stack)) {
                     waistItem = new CachedItem(stack, result.slotContext());
                 }
@@ -93,6 +104,16 @@ public final class WaistItemCache {
         UUID playerId = player.getUUID();
         remember(WAIST_ITEMS, playerId, waistItem);
         remember(SHADER_LIGHT_ITEMS, playerId, shaderLightItem);
+        if (!waistItem.isEmpty() || !shaderLightItem.isEmpty()) {
+            Diagnostics.log(
+                    "cache-result-" + playerId,
+                    "cache result player={}, waistItem={}, waistSlot={}, shaderItem={}, shaderSlot={}",
+                    Diagnostics.playerName(player),
+                    Diagnostics.itemId(waistItem.stack()),
+                    Diagnostics.slot(waistItem.slotContext()),
+                    Diagnostics.itemId(shaderLightItem.stack()),
+                    Diagnostics.slot(shaderLightItem.slotContext()));
+        }
         return new CacheResult(waistItem, shaderLightItem);
     }
 

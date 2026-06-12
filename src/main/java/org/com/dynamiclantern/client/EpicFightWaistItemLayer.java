@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import org.com.dynamiclantern.Config;
+import org.com.dynamiclantern.Diagnostics;
 import org.com.dynamiclantern.Dynamiclantern;
 import org.com.dynamiclantern.WaistItemCache;
 import yesman.epicfight.api.animation.Joint;
@@ -53,6 +54,7 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
     public static void register(IEventBus modEventBus) {
         if (!registered) {
             registered = true;
+            Diagnostics.log("epic-layer-register", "registering Dynamic Lantern EpicFight waist layer hook");
             EpicFightClientEventHooks.Registry.MODIFY_PATCHED_ENTITY.registerEvent(
                     EpicFightWaistItemLayer::onModifyPatchedRenderers,
                     Dynamiclantern.MODID);
@@ -62,6 +64,10 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
     private static void onModifyPatchedRenderers(RegisterPatchedRenderersEvent.ModifyEntity event) {
         PatchedEntityRenderer renderer = event.get(EntityType.PLAYER);
         if (renderer instanceof PatchedLivingEntityRenderer<?, ?, ?, ?, ?> livingRenderer) {
+            Diagnostics.log(
+                    "epic-layer-modify-player",
+                    "EpicFight MODIFY_PATCHED_ENTITY player renderer={}, adding Dynamic Lantern layer",
+                    renderer.getClass().getName());
             addLayer(livingRenderer);
         }
     }
@@ -84,15 +90,33 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
             float xRot,
             float partialTicks) {
         if (!Config.RENDER_WAIST_LANTERN.get() || !(entity instanceof Player player)) {
+            if (entity instanceof Player skippedPlayer) {
+                Diagnostics.log(
+                        "epic-layer-disabled-" + skippedPlayer.getUUID(),
+                        "EpicFight layer skipped player={}, renderConfig={}",
+                        Diagnostics.playerName(skippedPlayer),
+                        Config.RENDER_WAIST_LANTERN.get());
+            }
             return;
         }
 
         WaistItemCache.CachedItem cachedItem = WaistItemCache.getVisibleWaistItemOrRefresh(player);
         if (cachedItem.isEmpty()) {
+            Diagnostics.log(
+                    "epic-layer-empty-" + player.getUUID(),
+                    "EpicFight layer found no cached waist item player={}",
+                    Diagnostics.playerName(player));
             return;
         }
 
         ItemStack stack = cachedItem.stack();
+        Diagnostics.log(
+                "epic-layer-render-" + player.getUUID(),
+                "EpicFight layer rendering player={}, item={}, slot={}, packedLight={}, parentExpected=true",
+                Diagnostics.playerName(player),
+                Diagnostics.itemId(stack),
+                Diagnostics.slot(cachedItem.slotContext()),
+                packedLight);
         poseStack.pushPose();
         applyRuleTransform(poseStack, entityPatch, poses, BELT_LANTERN_RULE, player);
 
@@ -114,6 +138,11 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
                     headYaw - bodyYaw,
                     Mth.lerp(partialTicks, player.xRotO, player.getXRot()));
         } else {
+            Diagnostics.log(
+                    "epic-layer-no-parent-" + player.getUUID(),
+                    "EpicFight layer had no vanilla parent renderer player={}, item={}",
+                    Diagnostics.playerName(player),
+                    Diagnostics.itemId(stack));
             WaistItemModelRenderer.render(stack, poseStack, buffers, packedLight);
         }
 
@@ -196,9 +225,9 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
     private static RenderLayerParent<LivingEntity, EntityModel<LivingEntity>> getParentRenderer(LivingEntity entity) {
         EntityRenderer<? extends Player> renderer;
         if (entity instanceof AbstractClientPlayer player) {
-            renderer = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().get(player.getSkin().model().id());
+            renderer = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().get(player.getSkin().model());
         } else {
-            renderer = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().get(PlayerSkin.Model.WIDE.id());
+            renderer = Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().get(PlayerSkin.Model.WIDE);
         }
         if (!(renderer instanceof LivingEntityRenderer<?, ?> livingRenderer)) {
             return null;

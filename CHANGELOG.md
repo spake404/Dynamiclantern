@@ -5,27 +5,39 @@
 ### English
 
 - Ported the 1.20.1 feature set to the NeoForge 1.21.1 branch.
-- Migrated Curios integration to Curios 9.5.1 Optional-based APIs.
-- Migrated item custom data used by the Cold Sweat Soulspring Lamp compatibility to Minecraft 1.21 data components.
+- Migrated Curios integration to Curios `9.5.1+1.21.1` Optional-based APIs.
+- Migrated Cold Sweat Soulspring Lamp custom item data to Minecraft 1.21 data components.
 - Migrated Epic Fight waist-layer registration to Epic Fight's 1.21 client event hooks.
+- Fixed Epic Fight duplicate or misplaced waist lantern rendering by letting Dynamic Lantern handle the lantern layer while preserving other Curios compatibility behavior.
 - Fixed Curios render visibility handling for waist lanterns.
 - Hiding a belt slot in Curios now hides Dynamic Lantern's waist model in both vanilla and Epic Fight rendering paths.
 - Shader held-item lighting now stops when the Curios belt slot display is disabled.
+- Added a Dynamic Lantern Curios belt validator for configured waist items.
+- Newly added waist display items can now be equipped in the Belt slot and show the Curios Belt tooltip without re-entering the world.
+- Kept built-in default waist items hidden from the settings list while allowing them by default when their owning mod is installed.
+- Kept `cold_sweat:soulspring_lamp` as a built-in waist item and shader-light item, with Curios attack fuel behavior support.
 - Replaced per-tick cache refresh with event-driven cache invalidation from Curios render-sync packets.
 - Kept cached Curios lookups for normal rendering and shader lighting without ignoring visibility changes.
-- Updated README and changelog for the 1.21.1 / 1.5.5 release.
+- Added `renderDiagnosticLog`, disabled by default, so release builds do not print render diagnostics during normal gameplay.
+- Updated README and changelog with bilingual documentation for the 1.21.1 / 1.5.5 release.
 
 ### 中文
 
 - 将 1.20.1 版本的功能迁移到 NeoForge 1.21.1 分支。
-- 将 Curios 集成迁移到 Curios 9.5.1 的 Optional API。
+- 将 Curios 集成迁移到 Curios `9.5.1+1.21.1` 的 Optional API。
 - 将 Cold Sweat Soulspring Lamp 兼容逻辑使用的物品自定义数据迁移到 Minecraft 1.21 Data Components。
 - 将 Epic Fight 腰间渲染层注册迁移到 Epic Fight 1.21 的客户端事件 hook。
+- 修复 Epic Fight 模型下灯笼重复渲染或位置错误的问题，由 Dynamic Lantern 接管灯笼渲染，同时保留其他 Curios 兼容逻辑。
 - 修复 Curios 显示开关对腰间灯笼不生效的问题。
 - 在 Curios 中关闭腰带槽位显示后，原版模型和 Epic Fight 模型路径下的腰间灯笼都会隐藏。
 - 关闭 Curios 显示后，shader held-item lighting 也会同步停止。
+- 新增 Dynamic Lantern 自己的 Curios 腰带槽位 validator，用于玩家配置的腰部显示物品。
+- 新增到腰部显示名单的物品现在可以立刻放入 Belt 槽位，并显示 Curios 的 Belt tooltip，不需要重新进入世界。
+- 内置默认腰部物品仍然不会显示在设置列表中，但在对应模组安装时会默认允许。
+- 保留 `cold_sweat:soulspring_lamp` 的内置腰部物品和 shader 发光支持，并支持 Curios 中的攻击燃料行为。
 - 移除按玩家 tick 刷新缓存的方案，改为 Curios 渲染显示同步包触发缓存失效。
 - 保留正常渲染和 shader 光照的 Curios 缓存，同时不再忽略显示状态变化。
+- 新增 `renderDiagnosticLog`，默认关闭，发布版正常游玩时不会输出渲染诊断日志。
 - 更新 1.21.1 / 1.5.5 版本的中英双语 README 和 CHANGELOG。
 
 ## 1.5.1 - 2026-06-12
@@ -45,7 +57,7 @@
 
 - 修复同时安装 EpicFightCuriosCompat 和 Dynamic Lantern 时腰间灯笼重复渲染的问题。
 - 灯笼渲染由 Dynamic Lantern 接管，同时保留 EpicFightCuriosCompat 对背包等其他 Curios 物品的兼容逻辑。
-- 补充并保留腰间显示白名单说明，玩家配置的方块或物品可以作为腰间灯笼渲染。
+- 补充并保留腰间显示名单说明，玩家配置的方块或物品可以作为腰间灯笼渲染。
 - 复用腰间物品和 shader 光源物品缓存，减少 Curios 腰带槽位扫描次数。
 - 缓存腰间物品规则解析结果，以及渲染器使用的玩家身体模型边界。
 - 未安装 Cold Sweat 时不再注册对应的服务器事件兼容逻辑。
@@ -72,9 +84,9 @@
 - 新增 `under_the_moon:moon_lamp` 内置默认支持。
 - 新增 `cold_sweat:soulspring_lamp` 专门适配：
   - 默认支持放入 Curios 腰带槽位。
-  - 放在 Curios 中时，补充与手持物品一致的攻击充能行为。
+  - 放在 Curios 中时，补充与手持物品一致的攻击燃料行为。
   - 按灵魂灯笼映射给 shader held-item lighting。
-- 调整 shader 发光规则：本身会发光的方块物品无需加入玩家白名单，也可以参与光影手持发光识别。
+- 调整 shader 发光规则：本身会发光的方块物品无需加入玩家名单，也可以参与光影手持发光识别。
 - 内置 Epic Fight 腰间渲染定位，复刻 EpicFightCuriosCompat 的腰带灯笼位置，不再要求安装该模组。
 - 将 Epic Fight 左侧悬挂位置略微向身体内侧收回，使左右两侧更对称。
 - 保留 `soulspringLampDebugLog` 诊断开关，发布版默认关闭。
@@ -91,7 +103,7 @@
 
 ### 中文
 
-- 新增可配置的腰间显示物品白名单。
+- 新增可配置的腰间显示物品名单。
 - 新增隐藏的内置腰间物品支持，并允许运行时为配置物品提供 Curios 腰带支持。
 - 新增非方块腰间物品的物品模型渲染。
 - 将 shader 发光识别收窄到 Curios 腰带中的发光方块物品或内置 shader 发光例外物品。

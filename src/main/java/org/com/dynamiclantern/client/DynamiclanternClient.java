@@ -4,6 +4,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import org.com.dynamiclantern.Diagnostics;
 import org.com.dynamiclantern.WaistItemRules;
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
@@ -26,6 +27,12 @@ public final class DynamiclanternClient {
     }
 
     public static void registerOptionalModListeners(IEventBus modEventBus) {
+        Diagnostics.log(
+                "client-optional-mods",
+                "optional mods epicfight={}, epicfight_curios_compat={}, cold_sweat={}",
+                ModList.get().isLoaded("epicfight"),
+                ModList.get().isLoaded("epicfight_curios_compat"),
+                ModList.get().isLoaded("cold_sweat"));
         if (ModList.get().isLoaded("epicfight")) {
             EpicFightWaistItemLayer.register(modEventBus);
         }
@@ -38,6 +45,10 @@ public final class DynamiclanternClient {
         }
         if (changed) {
             CuriosRendererRegistry.load();
+            Diagnostics.log(
+                    "client-renderer-load",
+                    "registered/loaded Dynamic Lantern Curios renderers, totalRegistered={}",
+                    REGISTERED_RENDERERS.size());
         }
     }
 
@@ -53,6 +64,10 @@ public final class DynamiclanternClient {
         }
 
         CuriosRendererRegistry.register(item, DynamiclanternClient::createRenderer);
+        Diagnostics.log(
+                "client-renderer-register-" + WaistItemRules.itemId(item),
+                "registered Curios renderer for item={}",
+                WaistItemRules.itemId(item));
         return true;
     }
 

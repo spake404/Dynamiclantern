@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "validators": [
+    "dynamiclantern:waist_renderable"
+  ]
+}

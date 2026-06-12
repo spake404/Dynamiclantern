@@ -15,6 +15,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.com.dynamiclantern.Config;
+import org.com.dynamiclantern.Diagnostics;
 import org.com.dynamiclantern.WaistItemCache;
 import org.com.dynamiclantern.WaistItemRules;
 import org.com.dynamiclantern.mixin.ModelPartAccessor;
@@ -44,17 +45,49 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             float ageInTicks,
             float netHeadYaw,
             float headPitch) {
-        if (!Config.RENDER_WAIST_LANTERN.get()
-                || !WaistItemRules.isVisibleBeltSlot(slotContext)
-                || !WaistItemRules.isRenderableWaistItem(stack)
-                || !(slotContext.entity() instanceof Player player)
-                || !(parent.getModel() instanceof PlayerModel<?> playerModel)) {
+        boolean configEnabled = Config.RENDER_WAIST_LANTERN.get();
+        boolean visibleBelt = WaistItemRules.isVisibleBeltSlot(slotContext);
+        boolean renderable = WaistItemRules.isRenderableWaistItem(stack);
+        boolean hasPlayer = slotContext != null && slotContext.entity() instanceof Player;
+        boolean hasPlayerModel = parent.getModel() instanceof PlayerModel<?>;
+        if (Diagnostics.isInteresting(stack)) {
+            Diagnostics.log(
+                    "curio-render-enter-" + Diagnostics.itemId(stack),
+                    "CurioWaistItemRenderer enter item={}, slot={}, config={}, visibleBelt={}, renderable={}, hasPlayer={}, hasPlayerModel={}, call={}",
+                    Diagnostics.itemId(stack),
+                    Diagnostics.slot(slotContext),
+                    configEnabled,
+                    visibleBelt,
+                    renderable,
+                    hasPlayer,
+                    hasPlayerModel,
+                    EpicFightCuriosFallbackGuard.currentCallSummary());
+        }
+
+        if (!configEnabled || !visibleBelt || !renderable || !hasPlayer || !hasPlayerModel) {
             return;
         }
-        if (EpicFightCuriosFallbackGuard.isSuppressedLayerCall()) {
+        Player player = (Player) slotContext.entity();
+        PlayerModel<?> playerModel = (PlayerModel<?>) parent.getModel();
+        boolean suppressed = EpicFightCuriosFallbackGuard.isSuppressedLayerCall();
+        if (Diagnostics.isInteresting(stack)) {
+            Diagnostics.log(
+                    "curio-render-guard-" + Diagnostics.itemId(stack),
+                    "CurioWaistItemRenderer guard item={}, suppressed={}, call={}",
+                    Diagnostics.itemId(stack),
+                    suppressed,
+                    EpicFightCuriosFallbackGuard.currentCallSummary());
+        }
+        if (suppressed) {
             return;
         }
 
+        Diagnostics.log(
+                "curio-render-draw-" + player.getUUID(),
+                "CurioWaistItemRenderer drawing player={}, item={}, slot={}",
+                Diagnostics.playerName(player),
+                Diagnostics.itemId(stack),
+                Diagnostics.slot(slotContext));
         WaistItemCache.remember(player, slotContext, stack);
         poseStack.pushPose();
 
