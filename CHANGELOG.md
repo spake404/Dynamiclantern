@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.6.0 - 2026-06-14
+
+### English
+
+- Added config-loaded guards around Dynamic Lantern waist item rule resolution.
+- Fixed a startup failure where Curios could call `dynamiclantern:waist_renderable` before the NeoForge client config finished loading.
+- Avoided reading `waistRenderableItems` before `dynamiclantern-client.toml` is loaded.
+- Kept built-in default waist items available during early startup while deferring player-configured waist items until the config is loaded.
+- Prevented early empty config reads from being cached as final waist item rules.
+
+### 中文
+
+- 为 Dynamic Lantern 的腰间物品规则解析增加配置加载状态保护。
+- 修复 Curios 可能在 NeoForge 客户端配置加载完成前调用 `dynamiclantern:waist_renderable`，导致启动失败的问题。
+- 避免在 `dynamiclantern-client.toml` 加载前读取 `waistRenderableItems`。
+- 启动早期仍保留内置默认腰间物品可用，玩家配置的腰间物品会延后到配置加载完成后再解析。
+- 避免把启动早期的空配置读取结果缓存成最终腰间物品规则。
+
 ## 1.5.5 - 2026-06-12
 
 ### English

@@ -168,6 +168,6 @@ The client config file also includes:
 
 ## Version / 版本
 
-Current version / 当前版本：`1.5.5`
+Current version / 当前版本：`1.6.0`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

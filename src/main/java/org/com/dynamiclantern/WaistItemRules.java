@@ -192,7 +192,7 @@ public final class WaistItemRules {
     }
 
     public static List<String> getConfiguredItemIds() {
-        return normalizeIds(Config.WAIST_RENDERABLE_ITEMS.get());
+        return Config.isLoaded() ? getConfiguredItemIdsUnsafe() : List.of();
     }
 
     public static List<String> getRenderableItemIds() {
@@ -307,7 +307,8 @@ public final class WaistItemRules {
                 return;
             }
 
-            List<String> configuredIds = getConfiguredItemIds();
+            boolean configLoaded = Config.isLoaded();
+            List<String> configuredIds = configLoaded ? getConfiguredItemIdsUnsafe() : List.of();
             Set<Item> configuredItems = resolveItems(configuredIds);
             Set<Item> renderableItems = new HashSet<>(resolveItems(BUILT_IN_DEFAULT_ITEM_IDS));
             renderableItems.addAll(configuredItems);
@@ -316,8 +317,12 @@ public final class WaistItemRules {
             cachedRenderableItems = Set.copyOf(renderableItems);
             cachedBuiltInShaderLightItems = resolveItems(BUILT_IN_SHADER_LIGHT_ITEM_IDS);
             cachedColdSweatSoulspringLampItem = resolveItem(COLD_SWEAT_SOULSPRING_LAMP_ID).orElse(Items.AIR);
-            cacheValid = true;
+            cacheValid = configLoaded;
         }
+    }
+
+    private static List<String> getConfiguredItemIdsUnsafe() {
+        return normalizeIds(Config.WAIST_RENDERABLE_ITEMS.get());
     }
 
     private static Set<Item> resolveItems(Collection<String> ids) {
