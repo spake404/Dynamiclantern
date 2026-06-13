@@ -160,6 +160,6 @@ The client config file also includes `soulspringLampDebugLog` for Soulspring Lam
 
 ## Version / 版本
 
-Current version / 当前版本：`1.5.6`
+Current version / 当前版本：`1.6.0`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

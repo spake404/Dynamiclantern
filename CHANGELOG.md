@@ -1,20 +1,42 @@
 # Changelog
 
+## 1.6.0 - 2026-06-14
+
+### English
+
+- Added config-loaded guards around Dynamic Lantern waist item rule resolution.
+- Fixed a startup failure where Curios could call `dynamiclantern:waist_renderable` before the Forge client config finished loading.
+- Avoided reading `waistRenderableItems` before `dynamiclantern-client.toml` is loaded.
+- Kept built-in default waist items available during early startup while deferring player-configured waist items until the config is loaded.
+- Prevented early empty config reads from being cached as final waist item rules.
+
+### 中文
+
+- 为 Dynamic Lantern 的腰间物品规则解析增加配置加载状态保护。
+- 修复 Curios 可能在 Forge 客户端配置加载完成前调用 `dynamiclantern:waist_renderable`，导致启动失败的问题。
+- 避免在 `dynamiclantern-client.toml` 加载前读取 `waistRenderableItems`。
+- 启动早期仍保留内置默认腰间物品可用，玩家配置的腰间物品会延后到配置加载完成后再解析。
+- 避免把启动早期的空配置读取结果缓存成最终腰间物品规则。
+
 ## 1.5.6 - 2026-06-12
 
 ### English
 
-- Added a Dynamic Lantern Curios belt validator for configured waist display items.
-- Newly added waist display items can now be equipped in the Curios Belt slot without leaving and re-entering the world.
-- Curios item tooltips now show the Belt slot immediately for player-configured waist display items.
-- Kept existing built-in belt item tags for vanilla lanterns and optional compatibility items.
+- Backported the runtime Curios belt validator fix to the Forge 1.20.1 branch.
+- Added `dynamiclantern:waist_renderable` as a Dynamic Lantern Curios slot validator.
+- Added `data/dynamiclantern/curios/slots/belt.json` to append the Dynamic Lantern validator to the Curios Belt slot without replacing Curios' own `curios:tag` validator.
+- Player-configured waist display items can now be equipped in the Curios Belt slot immediately after being added in the config screen.
+- Curios item tooltips now show the Belt slot immediately for player-configured waist display items, without requiring the player to leave and re-enter the world.
+- Kept existing built-in belt item tags for vanilla lanterns and optional compatibility items, so default support remains unchanged.
 
 ### 中文
 
-- 新增 Dynamic Lantern 自己的 Curios 腰带槽位 validator，用于玩家配置的腰间显示物品。
-- 新增到腰间显示名单的物品现在可以立刻放入 Curios Belt 槽位，不需要退出并重新进入世界。
-- 玩家配置的腰间显示物品现在会立刻在 Curios tooltip 中显示 Belt 槽位。
-- 保留原有的内置腰带物品 tag，用于原版灯笼和可选兼容物品。
+- 将运行时 Curios 腰带槽位 validator 修复回移到 Forge 1.20.1 分支。
+- 新增 `dynamiclantern:waist_renderable`，作为 Dynamic Lantern 自己的 Curios 槽位 validator。
+- 新增 `data/dynamiclantern/curios/slots/belt.json`，在不替换 Curios 原有 `curios:tag` validator 的情况下，把 Dynamic Lantern validator 追加到 Curios Belt 槽位。
+- 玩家在设置界面新增到腰间显示名单的物品，现在可以立刻放入 Curios Belt 槽位。
+- 玩家配置的腰间显示物品现在会立刻在 Curios tooltip 中显示 Belt 槽位，不需要退出并重新进入世界。
+- 保留原有的内置腰带物品 tag，用于原版灯笼和可选兼容物品，默认支持行为不变。
 
 ## 1.5.5 - 2026-06-12
 

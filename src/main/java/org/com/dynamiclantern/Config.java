@@ -36,4 +36,8 @@ public final class Config {
 
     private Config() {
     }
+
+    public static boolean isLoaded() {
+        return SPEC.isLoaded();
+    }
 }
