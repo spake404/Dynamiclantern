@@ -39,17 +39,15 @@ public final class DynamiclanternClient {
     }
 
     public static void registerConfiguredRenderers() {
-        boolean changed = false;
         for (Item item : WaistItemRules.getRenderableItems()) {
-            changed |= registerRenderer(item);
+            registerRenderer(item);
         }
-        if (changed) {
-            CuriosRendererRegistry.load();
-            Diagnostics.log(
-                    "client-renderer-load",
-                    "registered/loaded Dynamic Lantern Curios renderers, totalRegistered={}",
-                    REGISTERED_RENDERERS.size());
-        }
+        // CuriosRendererRegistry.load() is deliberately NOT called here.
+        // Curios itself calls load() during EntityRenderersEvent.AddLayers (which fires
+        // after FMLClientSetupEvent), so our renderers will be picked up automatically.
+        // Calling load() here would prematurely initialize ALL mods' Curios renderers,
+        // and a broken renderer constructor in any other mod (e.g. Cataclysm accessing
+        // model layers too early) would crash our deferred work queue.
     }
 
     public static void registerConfiguredRenderer(Item item) {

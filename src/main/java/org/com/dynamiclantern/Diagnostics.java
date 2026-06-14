@@ -37,7 +37,12 @@ public final class Diagnostics {
     }
 
     private static boolean isEnabled() {
-        return Config.RENDER_DIAGNOSTIC_LOG.get();
+        try {
+            return Config.RENDER_DIAGNOSTIC_LOG.get();
+        } catch (IllegalStateException e) {
+            // Config not yet loaded (e.g. during mod construction); diagnostics default to off.
+            return false;
+        }
     }
 
     public static String itemId(ItemStack stack) {

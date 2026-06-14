@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.6.1 - 2026-06-14
+
+### English
+
+- Fixed `IllegalStateException: Cannot get config value before config is loaded` at startup caused by `Diagnostics.log()` reading config values during mod construction.
+- Removed premature `CuriosRendererRegistry.load()` call from the startup renderer registration path. Curios itself calls `load()` during `EntityRenderersEvent.AddLayers`, which fires after all model layers are ready. This avoids triggering broken renderer constructors from other mods (e.g. Cataclysm) that access model layers too early.
+
+### 中文
+
+- 修复启动时 `Diagnostics.log()` 在模组构造阶段读取配置值导致的 `IllegalStateException: Cannot get config value before config is loaded` 崩溃。
+- 移除启动渲染器注册路径中过早的 `CuriosRendererRegistry.load()` 调用。Curios 自身会在 `EntityRenderersEvent.AddLayers` 中调用 `load()`，该事件在所有模型层就绪后触发，避免因其他 mod（如 Cataclysm）的渲染器构造函数过早访问模型层而导致崩溃。
+
 ## 1.6.0 - 2026-06-14
 
 ### English
