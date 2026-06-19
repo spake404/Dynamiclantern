@@ -24,10 +24,10 @@ public class Dynamiclantern {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DynamiclanternClient.registerOptionalModListeners(modEventBus));
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
         CuriosApi.registerCurioPredicate(
                 new ResourceLocation(MODID, "waist_renderable"),
-                slotResult -> WaistItemRules.isBeltSlot(slotResult.slotContext())
-                        && WaistItemRules.isRenderableWaistItem(slotResult.stack()));
+                slotResult -> WaistItemRules.canEquipInWaistItemSlot(slotResult.stack(), slotResult.slotContext()));
         MinecraftForge.EVENT_BUS.register(WaistItemEvents.class);
         if (ModList.get().isLoaded("cold_sweat")) {
             MinecraftForge.EVENT_BUS.register(ColdSweatSoulspringCompat.class);

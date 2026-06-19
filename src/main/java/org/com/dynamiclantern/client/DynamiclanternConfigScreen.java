@@ -5,6 +5,8 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.com.dynamiclantern.Config;
+import org.com.dynamiclantern.LanternSlotManager;
+import org.com.dynamiclantern.WaistItemCache;
 
 public class DynamiclanternConfigScreen extends Screen {
     private final Screen parent;
@@ -22,18 +24,26 @@ public class DynamiclanternConfigScreen extends Screen {
         addToggle(center + 5, y, "dynamiclantern.config.physics", Config.ENABLE_PHYSICS.get(), value -> Config.ENABLE_PHYSICS.set(value));
         y += 26;
         addToggle(center - 155, y, "dynamiclantern.config.shader", Config.SHADER_OFFHAND_OVERRIDE.get(), value -> Config.SHADER_OFFHAND_OVERRIDE.set(value));
-        addToggle(center + 5, y, "dynamiclantern.config.left_side", Config.LEFT_SIDE.get(), value -> Config.LEFT_SIDE.set(value));
+        addToggle(center + 5, y, "dynamiclantern.config.lantern_slot", Config.ENABLE_LANTERN_SLOT.get(), value -> {
+            Config.ENABLE_LANTERN_SLOT.set(value);
+            Config.COMMON_SPEC.save();
+            syncLanternSlots();
+        });
         y += 26;
-        addToggle(center - 155, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), value -> Config.BACK_LANTERN.set(value));
-        addBounciness(center + 5, y);
+        addToggle(center - 155, y, "dynamiclantern.config.left_side", Config.LEFT_SIDE.get(), value -> Config.LEFT_SIDE.set(value));
+        addToggle(center + 5, y, "dynamiclantern.config.back", Config.BACK_LANTERN.get(), value -> Config.BACK_LANTERN.set(value));
+        y += 26;
+        addBounciness(center - 155, y);
         y += 26;
         this.addRenderableWidget(Button.builder(Component.translatable("dynamiclantern.config.waist_items"), button -> {
             Config.SPEC.save();
+            Config.COMMON_SPEC.save();
             this.minecraft.setScreen(new WaistItemListScreen(this));
         }).bounds(center - 155, y, 310, 20).build());
         y += 40;
         this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> {
             Config.SPEC.save();
+            Config.COMMON_SPEC.save();
             this.minecraft.setScreen(this.parent);
         }).bounds(center - 75, y, 150, 20).build());
     }
@@ -68,6 +78,7 @@ public class DynamiclanternConfigScreen extends Screen {
     @Override
     public void onClose() {
         Config.SPEC.save();
+        Config.COMMON_SPEC.save();
         this.minecraft.setScreen(this.parent);
     }
 
@@ -80,5 +91,12 @@ public class DynamiclanternConfigScreen extends Screen {
 
     private interface BooleanSetter {
         void set(boolean value);
+    }
+
+    private void syncLanternSlots() {
+        WaistItemCache.clearAll();
+        if (this.minecraft != null && this.minecraft.getSingleplayerServer() != null) {
+            LanternSlotManager.syncAll(this.minecraft.getSingleplayerServer());
+        }
     }
 }

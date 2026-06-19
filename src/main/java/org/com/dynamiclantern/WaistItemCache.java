@@ -40,12 +40,18 @@ public final class WaistItemCache {
     }
 
     public static void remember(Player player, SlotContext slotContext, ItemStack stack) {
+        CachedItem candidate = WaistItemRules.isVisibleWaistItemSlot(slotContext) && WaistItemRules.isRenderableWaistItem(stack)
+                ? new CachedItem(stack, slotContext)
+                : CachedItem.empty();
+        CachedItem cached = WAIST_ITEMS.get(player.getUUID());
+        if (!candidate.isEmpty() && cached != null && hasHigherPriority(cached, candidate)) {
+            return;
+        }
+
         remember(
                 WAIST_ITEMS,
                 player.getUUID(),
-                WaistItemRules.isVisibleBeltSlot(slotContext) && WaistItemRules.isRenderableWaistItem(stack)
-                        ? new CachedItem(stack, slotContext)
-                        : CachedItem.empty());
+                candidate);
     }
 
     public static ItemStack refresh(Player player) {
@@ -72,17 +78,22 @@ public final class WaistItemCache {
 
         var optionalHandler = CuriosApi.getCuriosInventory(player).resolve();
         if (optionalHandler.isPresent()) {
-            for (SlotResult result : optionalHandler.get().findCurios(WaistItemRules.BELT_SLOT)) {
-                if (!WaistItemRules.isVisibleBeltSlot(result.slotContext())) {
-                    continue;
-                }
+            for (String slotId : WaistItemRules.renderSlotIdsByPriority()) {
+                for (SlotResult result : optionalHandler.get().findCurios(slotId)) {
+                    if (!WaistItemRules.isVisibleWaistItemSlot(result.slotContext())) {
+                        continue;
+                    }
 
-                ItemStack stack = result.stack();
-                if (waistItem.isEmpty() && WaistItemRules.isRenderableWaistItem(stack)) {
-                    waistItem = new CachedItem(stack, result.slotContext());
-                }
-                if (shaderLightItem.isEmpty() && WaistItemRules.isShaderLightItem(stack)) {
-                    shaderLightItem = new CachedItem(stack, result.slotContext());
+                    ItemStack stack = result.stack();
+                    if (waistItem.isEmpty() && WaistItemRules.isRenderableWaistItem(stack)) {
+                        waistItem = new CachedItem(stack, result.slotContext());
+                    }
+                    if (shaderLightItem.isEmpty() && WaistItemRules.isShaderLightItem(stack)) {
+                        shaderLightItem = new CachedItem(stack, result.slotContext());
+                    }
+                    if (!waistItem.isEmpty() && !shaderLightItem.isEmpty()) {
+                        break;
+                    }
                 }
                 if (!waistItem.isEmpty() && !shaderLightItem.isEmpty()) {
                     break;
@@ -108,14 +119,19 @@ public final class WaistItemCache {
 
     private static boolean isRenderableCachedItem(CachedItem cached) {
         return cached.isEmpty()
-                || (WaistItemRules.isVisibleBeltSlot(cached.slotContext())
+                || (WaistItemRules.isVisibleWaistItemSlot(cached.slotContext())
                 && WaistItemRules.isRenderableWaistItem(cached.stack()));
     }
 
     private static boolean isShaderLightCachedItem(CachedItem cached) {
         return cached.isEmpty()
-                || (WaistItemRules.isVisibleBeltSlot(cached.slotContext())
+                || (WaistItemRules.isVisibleWaistItemSlot(cached.slotContext())
                 && WaistItemRules.isShaderLightItem(cached.stack()));
+    }
+
+    private static boolean hasHigherPriority(CachedItem current, CachedItem candidate) {
+        return !current.isEmpty()
+                && WaistItemRules.slotPriority(current.slotContext()) < WaistItemRules.slotPriority(candidate.slotContext());
     }
 
     private record CacheResult(CachedItem waistItem, CachedItem shaderLightItem) {
@@ -137,6 +153,11 @@ public final class WaistItemCache {
         private boolean matches(CachedItem other) {
             return ItemStack.matches(stack, other.stack)
                     && sameSlot(slotContext, other.slotContext);
+        }
+
+        public boolean matches(ItemStack otherStack, SlotContext otherSlotContext) {
+            return ItemStack.matches(stack, otherStack)
+                    && sameSlot(slotContext, otherSlotContext);
         }
 
         private static boolean sameSlot(SlotContext first, SlotContext second) {

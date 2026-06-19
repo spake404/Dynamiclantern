@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.7.0 - 2026-06-19
+
+### English
+
+- Added an optional dedicated Curios Lantern slot controlled by `enableLanternSlot` in the common config.
+- Added Dynamic Lantern slot modifier syncing for players, so the Lantern slot appears when enabled and is removed when disabled.
+- Allowed all Dynamic Lantern renderable waist items to equip in the dedicated Lantern slot.
+- Updated waist rendering and shader held-item lighting cache priority so the dedicated Lantern slot is preferred over the Belt slot when both contain lanterns.
+- Prevented duplicate rendering when both the dedicated Lantern slot and the Belt slot contain renderable lantern items.
+
+### 中文
+
+- 新增可选的 Curios 灯笼槽位，由 common 配置中的 `enableLanternSlot` 控制。
+- 新增玩家槽位 modifier 同步逻辑，开启时显示灯笼槽位，关闭时移除灯笼槽位。
+- 允许所有 Dynamic Lantern 可渲染腰间物品放入专用灯笼槽位。
+- 更新腰间渲染和 shader 手持物品光照缓存优先级，当灯笼槽位和腰带槽位同时有灯笼时优先使用灯笼槽位。
+- 避免灯笼槽位和腰带槽位同时有可渲染灯笼时重复渲染。
+
 ## 1.6.0 - 2026-06-14
 
 ### English

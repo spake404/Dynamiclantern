@@ -45,13 +45,18 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             float netHeadYaw,
             float headPitch) {
         if (!Config.RENDER_WAIST_LANTERN.get()
-                || !WaistItemRules.isVisibleBeltSlot(slotContext)
+                || !WaistItemRules.isVisibleWaistItemSlot(slotContext)
                 || !WaistItemRules.isRenderableWaistItem(stack)
                 || !(slotContext.entity() instanceof Player player)
                 || !(parent.getModel() instanceof PlayerModel<?> playerModel)) {
             return;
         }
         if (EpicFightCuriosFallbackGuard.isSuppressedLayerCall()) {
+            return;
+        }
+
+        WaistItemCache.CachedItem preferredItem = WaistItemCache.getVisibleWaistItemOrRefresh(player);
+        if (preferredItem.isEmpty() || !preferredItem.matches(stack, slotContext)) {
             return;
         }
 
