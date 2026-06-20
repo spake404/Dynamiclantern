@@ -22,10 +22,10 @@ public class Dynamiclantern {
 
     public Dynamiclantern(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
         CuriosApi.registerCurioPredicate(
                 ResourceLocation.fromNamespaceAndPath(MODID, "waist_renderable"),
-                slotResult -> WaistItemRules.isBeltSlot(slotResult.slotContext())
-                        && WaistItemRules.isRenderableWaistItem(slotResult.stack()));
+                slotResult -> WaistItemRules.canEquipInWaistItemSlot(slotResult.stack(), slotResult.slotContext()));
         if (FMLEnvironment.dist == Dist.CLIENT) {
             IConfigScreenFactory configScreenFactory = DynamiclanternClient.configScreenFactory();
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, configScreenFactory);

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "size": 0,
+  "order": 100,
+  "icon": "dynamiclantern:slot/empty_lantern_slot",
+  "validators": [
+    "dynamiclantern:waist_renderable"
+  ]
+}

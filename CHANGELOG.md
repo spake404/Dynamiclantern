@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.7.0 - 2026-06-20
+
+### English
+
+- Ported the optional dedicated Curios Lantern slot to the NeoForge 1.21.1 branch.
+- Added `enableLanternSlot` common config support and player slot syncing.
+- Preferred the dedicated Lantern slot over the Belt slot for waist rendering and shader held-item lighting.
+- Kept Lantern slot tooltip and rendering support disabled while the slot is disabled.
+- Added a dedicated Lantern slot icon.
+
+### 中文
+
+- 将可选专用 Curios 灯笼槽位移植到 NeoForge 1.21.1 分支。
+- 新增 `enableLanternSlot` common 配置和玩家槽位同步。
+- 腰间渲染和 shader 手持物品光照优先使用专用灯笼槽位，再回退到腰带槽位。
+- 关闭灯笼槽位时，同步关闭灯笼槽位 tooltip 和渲染支持。
+- 新增专用灯笼槽位图标。
+
 ## 1.6.1 - 2026-06-14
 
 ### English

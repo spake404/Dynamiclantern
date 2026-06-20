@@ -3,6 +3,7 @@
   "dynamiclantern.config.render": "腰间渲染",
   "dynamiclantern.config.physics": "摆动物理",
   "dynamiclantern.config.shader": "Curios 灯笼发光",
+  "dynamiclantern.config.lantern_slot": "灯笼槽位",
   "dynamiclantern.config.left_side": "左侧悬挂",
   "dynamiclantern.config.back": "靠后位置",
   "dynamiclantern.config.bounciness": "摆动强度",
@@ -13,5 +14,6 @@
   "dynamiclantern.config.waist_items.remove": "删除",
   "dynamiclantern.config.waist_items.invalid": "无效的物品 ID",
   "dynamiclantern.config.waist_items.added": "已添加 %s",
-  "dynamiclantern.config.waist_items.removed": "已删除 %s"
+  "dynamiclantern.config.waist_items.removed": "已删除 %s",
+  "curios.identifier.dynamic_lantern": "灯笼"
 }

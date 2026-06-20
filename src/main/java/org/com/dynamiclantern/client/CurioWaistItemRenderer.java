@@ -46,25 +46,25 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             float netHeadYaw,
             float headPitch) {
         boolean configEnabled = Config.RENDER_WAIST_LANTERN.get();
-        boolean visibleBelt = WaistItemRules.isVisibleBeltSlot(slotContext);
+        boolean visibleWaistSlot = WaistItemRules.isVisibleWaistItemSlot(slotContext);
         boolean renderable = WaistItemRules.isRenderableWaistItem(stack);
         boolean hasPlayer = slotContext != null && slotContext.entity() instanceof Player;
         boolean hasPlayerModel = parent.getModel() instanceof PlayerModel<?>;
         if (Diagnostics.isInteresting(stack)) {
             Diagnostics.log(
                     "curio-render-enter-" + Diagnostics.itemId(stack),
-                    "CurioWaistItemRenderer enter item={}, slot={}, config={}, visibleBelt={}, renderable={}, hasPlayer={}, hasPlayerModel={}, call={}",
+                    "CurioWaistItemRenderer enter item={}, slot={}, config={}, visibleWaistSlot={}, renderable={}, hasPlayer={}, hasPlayerModel={}, call={}",
                     Diagnostics.itemId(stack),
                     Diagnostics.slot(slotContext),
                     configEnabled,
-                    visibleBelt,
+                    visibleWaistSlot,
                     renderable,
                     hasPlayer,
                     hasPlayerModel,
                     EpicFightCuriosFallbackGuard.currentCallSummary());
         }
 
-        if (!configEnabled || !visibleBelt || !renderable || !hasPlayer || !hasPlayerModel) {
+        if (!configEnabled || !visibleWaistSlot || !renderable || !hasPlayer || !hasPlayerModel) {
             return;
         }
         Player player = (Player) slotContext.entity();
@@ -79,6 +79,11 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
                     EpicFightCuriosFallbackGuard.currentCallSummary());
         }
         if (suppressed) {
+            return;
+        }
+
+        WaistItemCache.CachedItem preferredItem = WaistItemCache.getVisibleWaistItemOrRefresh(player);
+        if (preferredItem.isEmpty() || !preferredItem.matches(stack, slotContext)) {
             return;
         }
 

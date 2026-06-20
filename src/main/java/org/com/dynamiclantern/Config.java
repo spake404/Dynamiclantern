@@ -6,6 +6,7 @@ import java.util.List;
 
 public final class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    private static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
 
     public static final ModConfigSpec.BooleanValue RENDER_WAIST_LANTERN = BUILDER
             .comment("Render equipped Curios lanterns on the player's waist.")
@@ -23,7 +24,7 @@ public final class Config {
             .comment("Render the lantern closer to the back of the waist.")
             .define("backLantern", false);
     public static final ModConfigSpec.BooleanValue SHADER_OFFHAND_OVERRIDE = BUILDER
-            .comment("Make Iris/Oculus see a Curios belt light-emitting block item as the offhand item for shader held-item lighting.")
+            .comment("Make Iris/Oculus see a Curios light-emitting waist item as the offhand item for shader held-item lighting.")
             .define("shaderOffhandOverride", true);
     public static final ModConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = BUILDER
             .comment("Log Cold Sweat Soulspring Lamp Curios compatibility diagnostics while the lamp is equipped.")
@@ -32,15 +33,24 @@ public final class Config {
             .comment("Log Dynamic Lantern render diagnostics. Disabled by default because it can be noisy during normal gameplay.")
             .define("renderDiagnosticLog", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> WAIST_RENDERABLE_ITEMS = BUILDER
-            .comment("Additional item ids that Dynamic Lantern is allowed to render on the Curios belt slot.")
+            .comment("Additional item ids that Dynamic Lantern is allowed to render on supported Curios waist slots.")
             .defineList("waistRenderableItems", List.of(), value -> value instanceof String);
 
+    public static final ModConfigSpec.BooleanValue ENABLE_LANTERN_SLOT = COMMON_BUILDER
+            .comment("Add Dynamic Lantern's dedicated Curios lantern slot to players.")
+            .define("enableLanternSlot", false);
+
     public static final ModConfigSpec SPEC = BUILDER.build();
+    public static final ModConfigSpec COMMON_SPEC = COMMON_BUILDER.build();
 
     private Config() {
     }
 
     public static boolean isLoaded() {
         return SPEC.isLoaded();
+    }
+
+    public static boolean isCommonLoaded() {
+        return COMMON_SPEC.isLoaded();
     }
 }

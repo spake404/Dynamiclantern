@@ -14,7 +14,7 @@ public final class WaistItemEvents {
 
     @SubscribeEvent
     public static void onCurioEquip(CurioCanEquipEvent event) {
-        if (WaistItemRules.canEquipInBelt(event.getStack(), event.getSlotContext())) {
+        if (WaistItemRules.canEquipInWaistItemSlot(event.getStack(), event.getSlotContext())) {
             event.setEquipResult(TriState.TRUE);
         }
     }
@@ -22,9 +22,24 @@ public final class WaistItemEvents {
     @SubscribeEvent
     public static void onCurioChange(CurioChangeEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity instanceof Player player && WaistItemRules.BELT_SLOT.equals(event.getIdentifier())) {
+        if (entity instanceof Player player && WaistItemRules.isKnownWaistItemSlot(event.getIdentifier())) {
             WaistItemCache.refresh(player);
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        LanternSlotManager.sync(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        LanternSlotManager.sync(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        LanternSlotManager.sync(event.getEntity());
     }
 
     @SubscribeEvent
@@ -36,5 +51,6 @@ public final class WaistItemEvents {
     public static void onPlayerClone(PlayerEvent.Clone event) {
         WaistItemCache.clear(event.getOriginal());
         WaistItemCache.clear(event.getEntity());
+        LanternSlotManager.sync(event.getEntity());
     }
 }

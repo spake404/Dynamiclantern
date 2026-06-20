@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public final class WaistItemRules {
+    public static final String LANTERN_SLOT = "dynamic_lantern";
     public static final String BELT_SLOT = "belt";
     public static final String COLD_SWEAT_SOULSPRING_LAMP_ID = "cold_sweat:soulspring_lamp";
     public static final List<String> BUILT_IN_DEFAULT_ITEM_IDS = List.of(
@@ -152,7 +153,7 @@ public final class WaistItemRules {
     }
 
     public static boolean isBeltSlot(SlotContext slotContext) {
-        return slotContext != null && BELT_SLOT.equals(slotContext.identifier());
+        return slotContext != null && isBeltSlot(slotContext.identifier());
     }
 
     public static boolean isVisibleBeltSlot(SlotContext slotContext) {
@@ -161,6 +162,50 @@ public final class WaistItemRules {
 
     public static boolean canEquipInBelt(ItemStack stack, SlotContext slotContext) {
         return isBeltSlot(slotContext) && isRenderableWaistItem(stack);
+    }
+
+    public static boolean isLanternSlot(SlotContext slotContext) {
+        return slotContext != null && isLanternSlot(slotContext.identifier());
+    }
+
+    public static boolean isKnownWaistItemSlot(String identifier) {
+        return isBeltSlot(identifier) || isLanternSlot(identifier);
+    }
+
+    public static boolean isWaistItemSlot(SlotContext slotContext) {
+        return slotContext != null && isWaistItemSlot(slotContext.identifier());
+    }
+
+    public static boolean isVisibleWaistItemSlot(SlotContext slotContext) {
+        return isWaistItemSlot(slotContext) && slotContext.visible();
+    }
+
+    public static boolean canEquipInWaistItemSlot(ItemStack stack, SlotContext slotContext) {
+        if (slotContext == null || !isRenderableWaistItem(stack)) {
+            return false;
+        }
+        if (isBeltSlot(slotContext)) {
+            return true;
+        }
+        return isLanternSlot(slotContext) && isLanternSlotEnabled();
+    }
+
+    public static boolean isLanternSlotEnabled() {
+        return Config.isCommonLoaded() && Config.ENABLE_LANTERN_SLOT.get();
+    }
+
+    public static List<String> renderSlotIdsByPriority() {
+        return isLanternSlotEnabled() ? List.of(LANTERN_SLOT, BELT_SLOT) : List.of(BELT_SLOT);
+    }
+
+    public static int slotPriority(SlotContext slotContext) {
+        if (isLanternSlot(slotContext)) {
+            return 0;
+        }
+        if (isBeltSlot(slotContext)) {
+            return 1;
+        }
+        return Integer.MAX_VALUE;
     }
 
     public static boolean isConfiguredWaistItem(ItemStack stack) {
@@ -335,6 +380,18 @@ public final class WaistItemRules {
 
     private static boolean isBuiltInDefaultItemId(String id) {
         return BUILT_IN_DEFAULT_ITEM_ID_SET.contains(normalizeId(id));
+    }
+
+    private static boolean isWaistItemSlot(String identifier) {
+        return isBeltSlot(identifier) || (isLanternSlot(identifier) && isLanternSlotEnabled());
+    }
+
+    private static boolean isBeltSlot(String identifier) {
+        return BELT_SLOT.equals(identifier);
+    }
+
+    private static boolean isLanternSlot(String identifier) {
+        return LANTERN_SLOT.equals(identifier);
     }
 
     private static boolean isBuiltInShaderLightItem(ItemStack stack) {
