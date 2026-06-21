@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.1 - 2026-06-21
+
+### English
+
+- Fixed a startup crash with Cataclysm Curios renderers by avoiding premature `CuriosRendererRegistry.load()` during Dynamic Lantern client setup.
+
+### 中文
+
+- 修复与 Cataclysm Curios 渲染器一起安装时的启动崩溃：Dynamic Lantern 客户端初始化阶段不再过早调用 `CuriosRendererRegistry.load()`。
+
 ## 1.8.0 - 2026-06-21
 
 ### English

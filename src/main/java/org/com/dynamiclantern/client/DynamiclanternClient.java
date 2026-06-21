@@ -33,13 +33,13 @@ public final class DynamiclanternClient {
     }
 
     public static void registerConfiguredRenderers() {
-        boolean changed = false;
         for (Item item : WaistItemRules.getRenderableItems()) {
-            changed |= registerRenderer(item);
+            registerRenderer(item);
         }
-        if (changed) {
-            CuriosRendererRegistry.load();
-        }
+        // CuriosRendererRegistry.load() is deliberately not called during client setup.
+        // Curios calls load() during EntityRenderersEvent.AddLayers, after model layers
+        // are ready. Loading every mod's Curios renderer here can crash mods whose
+        // renderer constructors access their model layers, such as Cataclysm.
     }
 
     public static void registerConfiguredRenderer(Item item) {

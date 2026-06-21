@@ -167,6 +167,6 @@ common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添�
 
 ## Version / 版本
 
-Current version / 当前版本：`1.8.0`
+Current version / 当前版本：`1.8.1`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.
