@@ -15,6 +15,7 @@ Dynamic Lantern is a Forge 1.20.1 mod that renders supported Curios lantern item
 - Provides left-side and back-side placement options.
 - Adds configurable pendulum-style swing physics.
 - Lets Iris/Oculus shader held-item lighting use supported Curios light-emitting waist items, even when they are not in the user whitelist.
+- Supports legacy SEUS v11-style shader held-light uniforms by promoting Curios waist light to the main-hand light path when needed.
 - Includes built-in shader lighting support for `cold_sweat:soulspring_lamp`, mapped as a soul lantern for shader held-item IDs.
 - Includes internal Epic Fight model positioning, so EpicFightCuriosCompat is not required for the lantern position.
 - Avoids duplicate lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
@@ -166,6 +167,6 @@ common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添�
 
 ## Version / 版本
 
-Current version / 当前版本：`1.7.0`
+Current version / 当前版本：`1.8.0`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

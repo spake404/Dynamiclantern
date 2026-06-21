@@ -9,6 +9,7 @@
   ],
   "client": [
     "IrisIdMapUniformsMixin",
+    "IrisShaderReloadMixin",
     "EpicFightCuriosCompatSlotRuleMixin",
     "CuriosSyncRenderMixin",
     "ModelPartAccessor"

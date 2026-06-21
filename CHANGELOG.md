@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.8.0 - 2026-06-21
+
+### English
+
+- Added SEUS v11 compatibility for Curios waist light sources by supporting legacy main-hand-only shader held-light uniforms.
+- Kept modern Iris/Oculus shaderpacks on the existing offhand override path to avoid double-counting Curios light sources.
+- Refresh shader held-light compatibility only when shaderpacks load or reload, instead of polling during gameplay.
+
+### 中文
+
+- 为 SEUS v11 增加 Curios 腰间光源兼容，支持旧版只读取主手光照的 shader held-light uniform。
+- 现代 Iris/Oculus 光影包继续使用原有副手伪装路径，避免 Curios 光源被重复计算。
+- shader 手持光源兼容判定仅在光影加载或重载时刷新，不在游玩过程中轮询。
+
 ## 1.7.0 - 2026-06-19
 
 ### English

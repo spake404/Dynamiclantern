@@ -162,6 +162,7 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     compileOnly fg.deobf("curse.maven:epic-fight-mod-405076:8049910")
     runtimeOnly fg.deobf("curse.maven:epic-fight-mod-405076:8049910")
+    compileOnly fg.deobf("curse.maven:oculus-581495:6020952")
     runtimeOnly fg.deobf("curse.maven:oculus-581495:6020952")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5681725")
     runtimeOnly fg.deobf("curse.maven:sophisticated-core-618298:8201810")
