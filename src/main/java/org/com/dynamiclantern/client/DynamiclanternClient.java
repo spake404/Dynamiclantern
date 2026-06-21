@@ -19,6 +19,7 @@ public final class DynamiclanternClient {
     }
 
     public static void init() {
+        ShaderHeldLightMode.refresh();
         registerConfiguredRenderers();
     }
 

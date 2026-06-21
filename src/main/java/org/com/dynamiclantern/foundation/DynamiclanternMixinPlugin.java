@@ -22,7 +22,7 @@ public class DynamiclanternMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.endsWith("IrisIdMapUniformsMixin")) {
+        if (mixinClassName.endsWith("IrisIdMapUniformsMixin") || mixinClassName.endsWith("IrisShaderReloadMixin")) {
             return isModLoaded("iris") || isModLoaded("oculus");
         }
         if (mixinClassName.endsWith("EpicFightCuriosCompatSlotRuleMixin")) {

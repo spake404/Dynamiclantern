@@ -115,6 +115,8 @@ dependencies {
     runtimeOnly "curse.maven:irisshaders-455508:6661598"
     compileOnly "curse.maven:sodium-394468:6382651"
     runtimeOnly "curse.maven:sodium-394468:6382651"
+    implementation "curse.maven:lendercataclysm-551586:8246034"
+    implementation "curse.maven:lionfish-api-1001614:8230518"
     // Example mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
