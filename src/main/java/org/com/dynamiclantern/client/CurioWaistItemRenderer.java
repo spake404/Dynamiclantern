@@ -29,6 +29,19 @@ import java.util.WeakHashMap;
 
 public class CurioWaistItemRenderer implements ICurioRenderer {
     private static final Map<ModelPart, Bounds> BODY_BOUNDS = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final float FIREFLY_JAR_SWING_PIVOT_Y = 11.0F / 16.0F;
+    private static final float FIREFLY_JAR_OFFSET_X = 0.0F;
+    private static final float FIREFLY_JAR_OFFSET_Y = 0.0F;
+    private static final float FIREFLY_JAR_OFFSET_Z = -0.22F;
+    private static final float FIREFLY_JAR_ROTATION_X = 0.0F;
+    private static final float FIREFLY_JAR_ROTATION_Y = 0.0F;
+    private static final float FIREFLY_JAR_ROTATION_Z = 0.0F;
+    private static final float FIREFLY_JAR_SCALE = 0.7F;
+    private static final float FIREFLY_JAR_SWING_ROLL_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_SWING_PITCH_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_LEG_PITCH_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_BODY_PITCH_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_PITCH_OFFSET = 0.0F;
 
     @Override
     public <T extends LivingEntity, M extends EntityModel<T>> void render(
@@ -75,10 +88,23 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
         Vec3 worldAnchor = new Vec3(localPosition.x(), localPosition.y(), localPosition.z()).add(player.getPosition(partialTicks));
 
         Vec3 swing = LanternPhysics.update(player, worldAnchor, partialTicks);
-        float legOffset = Math.min(0.0F, playerModel.rightLeg.xRot / 3.0F);
-        float pitch = (float) swing.z + legOffset - (Config.BACK_LANTERN.get() ? -0.1F : 0.1F) - playerModel.body.xRot;
+        float roll = (float) swing.x;
+        float swingPitch = (float) swing.z;
+        float legPitch = Math.min(0.0F, playerModel.rightLeg.xRot / 3.0F);
+        float slotPitch = Config.BACK_LANTERN.get() ? 0.1F : -0.1F;
+        float bodyPitch = -playerModel.body.xRot;
+        float extraPitch = 0.0F;
 
-        poseStack.mulPose(new Quaternionf().rotationZYX((float) swing.x, 0.0F, pitch));
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            roll *= FIREFLY_JAR_SWING_ROLL_SCALE;
+            swingPitch *= FIREFLY_JAR_SWING_PITCH_SCALE;
+            legPitch *= FIREFLY_JAR_LEG_PITCH_SCALE;
+            bodyPitch *= FIREFLY_JAR_BODY_PITCH_SCALE;
+            extraPitch = FIREFLY_JAR_PITCH_OFFSET;
+        }
+        float pitch = swingPitch + legPitch + slotPitch + bodyPitch + extraPitch;
+
+        poseStack.mulPose(new Quaternionf().rotationZYX(roll, 0.0F, pitch));
         poseStack.translate(-0.5F, -pivotY, -0.5F);
         applyModelOffset(stack, poseStack);
 
@@ -98,12 +124,26 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
     }
 
     private static float swingPivotY(ItemStack stack) {
-        return WaistItemRules.isColdSweatSoulspringLamp(stack) ? 1.18F : 11.0F / 16.0F;
+        if (WaistItemRules.isColdSweatSoulspringLamp(stack)) {
+            return 1.18F;
+        }
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            return FIREFLY_JAR_SWING_PIVOT_Y;
+        }
+        return 11.0F / 16.0F;
     }
 
     private static void applyModelOffset(ItemStack stack, PoseStack poseStack) {
         if (WaistItemRules.isColdSweatSoulspringLamp(stack)) {
             poseStack.translate(0.0F, -0.28F, 0.0F);
+        }
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            poseStack.translate(FIREFLY_JAR_OFFSET_X + 0.5F, FIREFLY_JAR_OFFSET_Y + 0.5F, FIREFLY_JAR_OFFSET_Z + 0.5F);
+            poseStack.mulPose(Axis.XP.rotationDegrees(FIREFLY_JAR_ROTATION_X));
+            poseStack.mulPose(Axis.YP.rotationDegrees(FIREFLY_JAR_ROTATION_Y));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(FIREFLY_JAR_ROTATION_Z));
+            poseStack.scale(FIREFLY_JAR_SCALE, FIREFLY_JAR_SCALE, FIREFLY_JAR_SCALE);
+            poseStack.translate(-0.5F, -0.5F, -0.5F);
         }
     }
 

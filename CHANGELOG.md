@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.5 - 2026-07-10
+
+### English
+
+- Added built-in Twilight Forest `twilightforest:firefly_jar` support for the Curios Belt slot and Dynamic Lantern slot.
+
+### 中文
+
+- 新增暮色森林 `twilightforest:firefly_jar` 内置兼容，可放入 Curios 腰带槽和 Dynamic Lantern 灯笼槽。
+
 ## 1.8.1 - 2026-06-21
 
 ### English

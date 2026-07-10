@@ -21,9 +21,11 @@ public final class WaistItemRules {
     public static final String LANTERN_SLOT = "dynamic_lantern";
     public static final String BELT_SLOT = "belt";
     public static final String COLD_SWEAT_SOULSPRING_LAMP_ID = "cold_sweat:soulspring_lamp";
+    public static final String TWILIGHT_FOREST_FIREFLY_JAR_ID = "twilightforest:firefly_jar";
     public static final List<String> BUILT_IN_DEFAULT_ITEM_IDS = List.of(
             "minecraft:lantern",
             "minecraft:soul_lantern",
+            TWILIGHT_FOREST_FIREFLY_JAR_ID,
             "under_the_moon:moon_lamp",
             COLD_SWEAT_SOULSPRING_LAMP_ID,
             "skinnedlanterns:bee_lantern_block",
@@ -148,6 +150,7 @@ public final class WaistItemRules {
     private static volatile Set<Item> cachedRenderableItems = Set.of();
     private static volatile Set<Item> cachedBuiltInShaderLightItems = Set.of();
     private static volatile Item cachedColdSweatSoulspringLampItem = Items.AIR;
+    private static volatile Item cachedTwilightForestFireflyJarItem = Items.AIR;
 
     private WaistItemRules() {
     }
@@ -305,6 +308,7 @@ public final class WaistItemRules {
         cachedRenderableItems = Set.of();
         cachedBuiltInShaderLightItems = Set.of();
         cachedColdSweatSoulspringLampItem = Items.AIR;
+        cachedTwilightForestFireflyJarItem = Items.AIR;
     }
 
     public static boolean isLightEmittingBlockItem(ItemStack stack) {
@@ -314,6 +318,10 @@ public final class WaistItemRules {
 
     public static boolean isColdSweatSoulspringLamp(ItemStack stack) {
         return !stack.isEmpty() && stack.getItem() == coldSweatSoulspringLampItem();
+    }
+
+    public static boolean isTwilightForestFireflyJar(ItemStack stack) {
+        return !stack.isEmpty() && stack.getItem() == twilightForestFireflyJarItem();
     }
 
     private static void setConfiguredItemIds(Collection<String> ids) {
@@ -342,6 +350,11 @@ public final class WaistItemRules {
         return cachedColdSweatSoulspringLampItem;
     }
 
+    private static Item twilightForestFireflyJarItem() {
+        ensureCaches();
+        return cachedTwilightForestFireflyJarItem;
+    }
+
     private static void ensureCaches() {
         if (cacheValid) {
             return;
@@ -362,6 +375,7 @@ public final class WaistItemRules {
             cachedRenderableItems = Set.copyOf(renderableItems);
             cachedBuiltInShaderLightItems = resolveItems(BUILT_IN_SHADER_LIGHT_ITEM_IDS);
             cachedColdSweatSoulspringLampItem = resolveItem(COLD_SWEAT_SOULSPRING_LAMP_ID).orElse(Items.AIR);
+            cachedTwilightForestFireflyJarItem = resolveItem(TWILIGHT_FOREST_FIREFLY_JAR_ID).orElse(Items.AIR);
             cacheValid = configLoaded;
         }
     }
