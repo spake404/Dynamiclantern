@@ -11,7 +11,9 @@
     "IrisIdMapUniformsMixin",
     "IrisShaderReloadMixin",
     "EpicFightCuriosCompatSlotRuleMixin",
+    "CuriosSyncCuriosMixin",
     "CuriosSyncRenderMixin",
+    "CuriosSyncStackMixin",
     "ModelPartAccessor"
   ],
   "injectors": {

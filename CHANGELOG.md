@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.8.6 - 2026-07-25
+
+### English
+
+- Fixed Curios waist shader lighting not updating immediately after equipping or removing a lantern on dedicated servers.
+- Invalidated the client waist item cache after Curios stack and full inventory sync packets are applied.
+- Kept visibility changes event-driven without restoring per-tick Curios inventory scans.
+
+### 中文
+
+- 修复在专用服务器中装备或摘下 Curios 腰间灯笼后，光影发光状态不能立即更新的问题。
+- Curios 物品栈同步和完整饰品栏同步应用到客户端后，现在会使腰间物品缓存失效。
+- 继续使用事件驱动的可见性更新，不恢复每 tick 扫描 Curios 饰品栏。
+
 ## 1.8.5 - 2026-07-10
 
 ### English
