@@ -15,6 +15,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import org.com.dynamiclantern.compat.accessories.AccessoriesCompat;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
@@ -68,13 +69,14 @@ public final class ColdSweatSoulspringCompat {
             return;
         }
 
-        findCurioSoulspringLamp(player).ifPresent(result -> {
+        findEquippedSoulspringLamp(player).ifPresent(result -> {
             ItemStack stack = result.stack();
             Dynamiclantern.LOGGER.info(
-                    "[SoulspringCompat] Curios lamp detected: player={}, slot={}#{}, lit={}, fuel={}, waistRenderable={}, shaderLight={}",
+                    "[SoulspringCompat] equipped lamp detected: player={}, source={}, slot={}#{}, lit={}, fuel={}, waistRenderable={}, shaderLight={}",
                     player.getGameProfile().getName(),
-                    result.slotContext().identifier(),
-                    result.slotContext().index(),
+                    result.source(),
+                    result.slotName(),
+                    result.index(),
                     isLit(stack),
                     getFuel(stack),
                     WaistItemRules.isRenderableWaistItem(stack),
@@ -92,7 +94,7 @@ public final class ColdSweatSoulspringCompat {
             return;
         }
 
-        Optional<SlotResult> result = findCurioSoulspringLamp(player);
+        Optional<EquippedLamp> result = findEquippedSoulspringLamp(player);
         if (result.isEmpty()) {
             return;
         }
@@ -114,10 +116,11 @@ public final class ColdSweatSoulspringCompat {
 
         if (isDebugLogEnabled()) {
             Dynamiclantern.LOGGER.info(
-                    "[SoulspringCompat] Curios attack effect applied: player={}, slot={}#{}, target={}, fuelGained={}, fuel={}, extraDamage={}",
+                    "[SoulspringCompat] attack effect applied: player={}, source={}, slot={}#{}, target={}, fuelGained={}, fuel={}, extraDamage={}",
                     player.getGameProfile().getName(),
-                    result.get().slotContext().identifier(),
-                    result.get().slotContext().index(),
+                    result.get().source(),
+                    result.get().slotName(),
+                    result.get().index(),
                     BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()),
                     fuelGained,
                     getFuel(lamp),
@@ -125,13 +128,24 @@ public final class ColdSweatSoulspringCompat {
         }
     }
 
-    private static Optional<SlotResult> findCurioSoulspringLamp(Player player) {
+    private static Optional<EquippedLamp> findEquippedSoulspringLamp(Player player) {
         if (!COLD_SWEAT_LOADED) {
             return Optional.empty();
         }
 
-        return CuriosApi.getCuriosInventory(player)
-                .flatMap(handler -> handler.findFirstCurio(ColdSweatSoulspringCompat::isSoulspringLamp));
+        Optional<EquippedLamp> curiosLamp = CuriosApi.getCuriosInventory(player)
+                .flatMap(handler -> handler.findFirstCurio(ColdSweatSoulspringCompat::isSoulspringLamp))
+                .map(result -> new EquippedLamp(
+                        result.stack(),
+                        result.slotContext().identifier(),
+                        result.slotContext().index(),
+                        "curios"));
+        if (curiosLamp.isPresent() || !ModList.get().isLoaded("accessories")) {
+            return curiosLamp;
+        }
+
+        return AccessoriesCompat.findFirstManagedItem(player, ColdSweatSoulspringCompat::isSoulspringLamp)
+                .map(result -> new EquippedLamp(result.stack(), result.slotName(), result.index(), "accessories"));
     }
 
     private static boolean isSoulspringLamp(ItemStack stack) {
@@ -171,5 +185,8 @@ public final class ColdSweatSoulspringCompat {
             }
             return soulspringLampItem;
         }
+    }
+
+    private record EquippedLamp(ItemStack stack, String slotName, int index, String source) {
     }
 }

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "amount": 0,
+  "operation": "set",
+  "order": 1100,
+  "icon": "dynamiclantern:slot/empty_lantern_slot",
+  "validators": [
+    "dynamiclantern:waist_renderable"
+  ]
+}

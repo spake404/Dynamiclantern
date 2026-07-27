@@ -1,5 +1,69 @@
 # Changelog
 
+## 1.8.8 - 2026-07-27
+
+### English
+
+- Added optional Accessories `1.1.0-beta.53+1.21.1` support for Belt and Dynamic Lantern slots.
+- Reused the existing waist placement, swing physics, Firefly Jar rendering, Epic Fight layer, shader lighting, and LambDynamicLights integration for Accessories items.
+- Added an Accessories `dynamic_lantern` slot controlled by the existing `enableLanternSlot` common config.
+- Added event-driven Accessories cache invalidation for item, container, and visibility changes without per-tick inventory scans.
+- Extended the Cold Sweat Soulspring Lamp attack fuel behavior to managed Accessories slots.
+- Kept Curios and Accessories interoperable with deterministic slot and source priority, while preventing duplicate waist rendering and dynamic-light evaluation.
+
+### 中文
+
+- 新增可选的 Accessories `1.1.0-beta.53+1.21.1` 兼容，支持腰带槽和 Dynamic Lantern 灯笼槽。
+- Accessories 物品复用现有腰间位置、摆动物理、萤火虫罐子渲染、Epic Fight 图层、shader 光照和 LambDynamicLights 兼容。
+- 新增由现有 `enableLanternSlot` common 配置控制的 Accessories `dynamic_lantern` 槽位。
+- 通过物品、容器和可见性变更事件使 Accessories 缓存失效，不增加每 tick 背包扫描。
+- Cold Sweat Soulspring Lamp 放在受管理的 Accessories 槽位中时也支持攻击燃料效果。
+- Curios 与 Accessories 同时安装时使用确定的槽位和来源优先级，并避免重复腰间渲染和动态光计算。
+
+## 1.8.7 - 2026-07-27
+
+### English
+
+- Added optional LambDynamicLights `4.8.10+1.21.1` compatibility for visible, renderable Curios Belt and Dynamic Lantern slot items.
+- Reused LambDynamicLights item luminance, JSON, block-light, and underwater rules for every Curios light candidate.
+- Added mapped fallback lighting for special Dynamic Lantern shader lights such as the Cold Sweat Soulspring Lamp.
+- Cached all visible waist items through the existing event-driven invalidation path without restoring per-tick Curios scans.
+- Kept LambDynamicLights handling other Curios slots while making Belt and Dynamic Lantern slot lighting respect Curios visibility.
+
+### 中文
+
+- 新增可选的 LambDynamicLights `4.8.10+1.21.1` 兼容，让 Curios 腰带槽和专用灯笼槽中可见、可渲染的物品产生动态光。
+- 每个 Curios 光源候选都复用 LambDynamicLights 自身的物品亮度、JSON、方块亮度和水下规则。
+- 为 Cold Sweat Soulspring Lamp 等 Dynamic Lantern 特殊 shader 光源增加映射后的动态光回退计算。
+- 通过现有事件驱动失效机制缓存所有可见腰间物品，不恢复每 tick 扫描 Curios。
+- 保留 LambDynamicLights 对其他 Curios 槽位的处理，同时让腰带槽和专用灯笼槽的灯光遵循 Curios 可见性。
+
+## 1.8.6 - 2026-07-25
+
+### English
+
+- Fixed Curios waist shader lighting not updating immediately after equipping or removing a lantern on dedicated servers.
+- Invalidated the matching player's client waist cache after Curios stack and full inventory sync packets are applied.
+- Kept visibility changes event-driven without restoring per-tick Curios inventory scans.
+
+### 中文
+
+- 修复在专用服务器中装备或摘下 Curios 腰间灯笼后，光影发光状态不能立即更新的问题。
+- Curios 物品栈同步和完整饰品栏同步应用到客户端后，现在会定向清除对应玩家的腰间物品缓存。
+- 继续使用事件驱动的可见性更新，不恢复每 tick 扫描 Curios 饰品栏。
+
+## 1.8.5 - 2026-07-10
+
+### English
+
+- Added built-in Twilight Forest `twilightforest:firefly_jar` support for the Curios Belt slot and Dynamic Lantern slot.
+- Added dedicated Firefly Jar waist scaling, placement, swing pivot, and rotation handling.
+
+### 中文
+
+- 新增暮色森林 `twilightforest:firefly_jar` 内置兼容，可放入 Curios 腰带槽和 Dynamic Lantern 灯笼槽。
+- 新增 Firefly Jar 专用的腰间缩放、位置、摆动支点和旋转处理。
+
 ## 1.8.0 - 2026-06-21
 
 ### English

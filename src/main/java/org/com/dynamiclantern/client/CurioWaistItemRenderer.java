@@ -18,6 +18,7 @@ import org.com.dynamiclantern.Config;
 import org.com.dynamiclantern.Diagnostics;
 import org.com.dynamiclantern.WaistItemCache;
 import org.com.dynamiclantern.WaistItemRules;
+import org.com.dynamiclantern.WaistSlot;
 import org.com.dynamiclantern.mixin.ModelPartAccessor;
 import org.joml.Quaternionf;
 import org.joml.Vector4f;
@@ -30,6 +31,19 @@ import java.util.WeakHashMap;
 
 public class CurioWaistItemRenderer implements ICurioRenderer {
     private static final Map<ModelPart, Bounds> BODY_BOUNDS = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final float FIREFLY_JAR_SWING_PIVOT_Y = 11.0F / 16.0F;
+    private static final float FIREFLY_JAR_OFFSET_X = 0.3F;
+    private static final float FIREFLY_JAR_OFFSET_Y = 0.0F;
+    private static final float FIREFLY_JAR_OFFSET_Z = 0.13F;
+    private static final float FIREFLY_JAR_ROTATION_X = 0.0F;
+    private static final float FIREFLY_JAR_ROTATION_Y = 0.0F;
+    private static final float FIREFLY_JAR_ROTATION_Z = 0.0F;
+    private static final float FIREFLY_JAR_SCALE = 0.7F;
+    private static final float FIREFLY_JAR_SWING_ROLL_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_SWING_PITCH_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_LEG_PITCH_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_BODY_PITCH_SCALE = 1.0F;
+    private static final float FIREFLY_JAR_PITCH_OFFSET = 0.0F;
 
     @Override
     public <T extends LivingEntity, M extends EntityModel<T>> void render(
@@ -45,30 +59,60 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
             float ageInTicks,
             float netHeadYaw,
             float headPitch) {
+        if (slotContext == null || !(slotContext.entity() instanceof Player player)) {
+            return;
+        }
+        renderWaistItem(
+                stack,
+                WaistSlot.fromCurios(slotContext),
+                player,
+                poseStack,
+                parent.getModel(),
+                buffers,
+                packedLight,
+                limbSwing,
+                limbSwingAmount,
+                partialTicks,
+                ageInTicks,
+                netHeadYaw,
+                headPitch);
+    }
+
+    public static void renderWaistItem(
+            ItemStack stack,
+            WaistSlot slot,
+            Player player,
+            PoseStack poseStack,
+            EntityModel<?> model,
+            MultiBufferSource buffers,
+            int packedLight,
+            float limbSwing,
+            float limbSwingAmount,
+            float partialTicks,
+            float ageInTicks,
+            float netHeadYaw,
+            float headPitch) {
         boolean configEnabled = Config.RENDER_WAIST_LANTERN.get();
-        boolean visibleWaistSlot = WaistItemRules.isVisibleWaistItemSlot(slotContext);
+        boolean visibleWaistSlot = WaistItemRules.isVisibleWaistItemSlot(slot);
         boolean renderable = WaistItemRules.isRenderableWaistItem(stack);
-        boolean hasPlayer = slotContext != null && slotContext.entity() instanceof Player;
-        boolean hasPlayerModel = parent.getModel() instanceof PlayerModel<?>;
+        boolean hasPlayerModel = model instanceof PlayerModel<?>;
         if (Diagnostics.isInteresting(stack)) {
             Diagnostics.log(
-                    "curio-render-enter-" + Diagnostics.itemId(stack),
-                    "CurioWaistItemRenderer enter item={}, slot={}, config={}, visibleWaistSlot={}, renderable={}, hasPlayer={}, hasPlayerModel={}, call={}",
+                    "waist-render-enter-" + slot.source() + "-" + Diagnostics.itemId(stack),
+                    "waist renderer enter item={}, slot={}, config={}, visibleWaistSlot={}, renderable={}, hasPlayerModel={}, call={}",
                     Diagnostics.itemId(stack),
-                    Diagnostics.slot(slotContext),
+                    Diagnostics.slot(slot),
                     configEnabled,
                     visibleWaistSlot,
                     renderable,
-                    hasPlayer,
                     hasPlayerModel,
                     EpicFightCuriosFallbackGuard.currentCallSummary());
         }
 
-        if (!configEnabled || !visibleWaistSlot || !renderable || !hasPlayer || !hasPlayerModel) {
+        if (!configEnabled || !visibleWaistSlot || !renderable || !hasPlayerModel) {
             return;
         }
-        Player player = (Player) slotContext.entity();
-        PlayerModel<?> playerModel = (PlayerModel<?>) parent.getModel();
+        PlayerModel<?> playerModel = (PlayerModel<?>) model;
         boolean suppressed = EpicFightCuriosFallbackGuard.isSuppressedLayerCall();
         if (Diagnostics.isInteresting(stack)) {
             Diagnostics.log(
@@ -83,7 +127,7 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
         }
 
         WaistItemCache.CachedItem preferredItem = WaistItemCache.getVisibleWaistItemOrRefresh(player);
-        if (preferredItem.isEmpty() || !preferredItem.matches(stack, slotContext)) {
+        if (preferredItem.isEmpty() || !preferredItem.matches(stack, slot)) {
             return;
         }
 
@@ -92,8 +136,8 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
                 "CurioWaistItemRenderer drawing player={}, item={}, slot={}",
                 Diagnostics.playerName(player),
                 Diagnostics.itemId(stack),
-                Diagnostics.slot(slotContext));
-        WaistItemCache.remember(player, slotContext, stack);
+                Diagnostics.slot(slot));
+        WaistItemCache.remember(player, slot, stack);
         poseStack.pushPose();
 
         boolean armored = hasTorsoOrLegArmor(player);
@@ -108,10 +152,23 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
         Vec3 worldAnchor = new Vec3(localPosition.x(), localPosition.y(), localPosition.z()).add(player.getPosition(partialTicks));
 
         Vec3 swing = LanternPhysics.update(player, worldAnchor, partialTicks);
-        float legOffset = Math.min(0.0F, playerModel.rightLeg.xRot / 3.0F);
-        float pitch = (float) swing.z + legOffset - (Config.BACK_LANTERN.get() ? -0.1F : 0.1F) - playerModel.body.xRot;
+        float roll = (float) swing.x;
+        float swingPitch = (float) swing.z;
+        float legPitch = Math.min(0.0F, playerModel.rightLeg.xRot / 3.0F);
+        float slotPitch = Config.BACK_LANTERN.get() ? 0.1F : -0.1F;
+        float bodyPitch = -playerModel.body.xRot;
+        float extraPitch = 0.0F;
 
-        poseStack.mulPose(new Quaternionf().rotationZYX((float) swing.x, 0.0F, pitch));
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            roll *= FIREFLY_JAR_SWING_ROLL_SCALE;
+            swingPitch *= FIREFLY_JAR_SWING_PITCH_SCALE;
+            legPitch *= FIREFLY_JAR_LEG_PITCH_SCALE;
+            bodyPitch *= FIREFLY_JAR_BODY_PITCH_SCALE;
+            extraPitch = FIREFLY_JAR_PITCH_OFFSET;
+        }
+        float pitch = swingPitch + legPitch + slotPitch + bodyPitch + extraPitch;
+
+        poseStack.mulPose(new Quaternionf().rotationZYX(roll, 0.0F, pitch));
         poseStack.translate(-0.5F, -pivotY, -0.5F);
         applyModelOffset(stack, poseStack);
 
@@ -131,12 +188,26 @@ public class CurioWaistItemRenderer implements ICurioRenderer {
     }
 
     private static float swingPivotY(ItemStack stack) {
-        return WaistItemRules.isColdSweatSoulspringLamp(stack) ? 1.18F : 11.0F / 16.0F;
+        if (WaistItemRules.isColdSweatSoulspringLamp(stack)) {
+            return 1.18F;
+        }
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            return FIREFLY_JAR_SWING_PIVOT_Y;
+        }
+        return 11.0F / 16.0F;
     }
 
     private static void applyModelOffset(ItemStack stack, PoseStack poseStack) {
         if (WaistItemRules.isColdSweatSoulspringLamp(stack)) {
             poseStack.translate(0.0F, -0.28F, 0.0F);
+        }
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            poseStack.translate(FIREFLY_JAR_OFFSET_X + 0.5F, FIREFLY_JAR_OFFSET_Y + 0.5F, FIREFLY_JAR_OFFSET_Z + 0.5F);
+            poseStack.mulPose(Axis.XP.rotationDegrees(FIREFLY_JAR_ROTATION_X));
+            poseStack.mulPose(Axis.YP.rotationDegrees(FIREFLY_JAR_ROTATION_Y));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(FIREFLY_JAR_ROTATION_Z));
+            poseStack.scale(FIREFLY_JAR_SCALE, FIREFLY_JAR_SCALE, FIREFLY_JAR_SCALE);
+            poseStack.translate(-0.5F, -0.5F, -0.5F);
         }
     }
 

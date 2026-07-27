@@ -28,6 +28,19 @@ final class WaistItemModelRenderer {
             return;
         }
 
+        if (WaistItemRules.isTwilightForestFireflyJar(stack)) {
+            minecraft.getItemRenderer().renderStatic(
+                    stack,
+                    ItemDisplayContext.NONE,
+                    packedLight,
+                    OverlayTexture.NO_OVERLAY,
+                    poseStack,
+                    buffers,
+                    minecraft.level,
+                    0);
+            return;
+        }
+
         poseStack.pushPose();
         poseStack.translate(0.5F, 0.5F, 0.5F);
         poseStack.scale(0.75F, 0.75F, 0.75F);

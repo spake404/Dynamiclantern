@@ -9,7 +9,7 @@ public final class Config {
     private static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
 
     public static final ModConfigSpec.BooleanValue RENDER_WAIST_LANTERN = BUILDER
-            .comment("Render equipped Curios lanterns on the player's waist.")
+            .comment("Render equipped Curios or Accessories lanterns on the player's waist.")
             .define("renderWaistLantern", true);
     public static final ModConfigSpec.BooleanValue ENABLE_PHYSICS = BUILDER
             .comment("Apply a small pendulum swing to waist lantern rendering.")
@@ -24,7 +24,7 @@ public final class Config {
             .comment("Render the lantern closer to the back of the waist.")
             .define("backLantern", false);
     public static final ModConfigSpec.BooleanValue SHADER_OFFHAND_OVERRIDE = BUILDER
-            .comment("Make Iris/Oculus see a Curios light-emitting waist item as the offhand item for shader held-item lighting.")
+            .comment("Make Iris/Oculus see a light-emitting Curios or Accessories waist item as the offhand item for shader held-item lighting.")
             .define("shaderOffhandOverride", true);
     public static final ModConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = BUILDER
             .comment("Log Cold Sweat Soulspring Lamp Curios compatibility diagnostics while the lamp is equipped.")
@@ -33,11 +33,11 @@ public final class Config {
             .comment("Log Dynamic Lantern render diagnostics. Disabled by default because it can be noisy during normal gameplay.")
             .define("renderDiagnosticLog", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> WAIST_RENDERABLE_ITEMS = BUILDER
-            .comment("Additional item ids that Dynamic Lantern is allowed to render on supported Curios waist slots.")
+            .comment("Additional item ids that Dynamic Lantern is allowed to render on supported Curios or Accessories waist slots.")
             .defineList("waistRenderableItems", List.of(), value -> value instanceof String);
 
     public static final ModConfigSpec.BooleanValue ENABLE_LANTERN_SLOT = COMMON_BUILDER
-            .comment("Add Dynamic Lantern's dedicated Curios lantern slot to players.")
+            .comment("Add Dynamic Lantern's dedicated Curios and Accessories lantern slots to players.")
             .define("enableLanternSlot", false);
 
     public static final ModConfigSpec SPEC = BUILDER.build();

@@ -32,7 +32,6 @@ import yesman.epicfight.client.renderer.patched.layer.UniqueLayer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEntityPatch<LivingEntity>, EntityModel<LivingEntity>> {
-    private static final CurioWaistItemRenderer WAIST_RENDERER = new CurioWaistItemRenderer();
     private static final float LEFT_SIDE_INSET_PIXELS = 2.0F / 16.0F;
     private static final SlotRule BELT_LANTERN_RULE = new SlotRule(
             "Hips",
@@ -115,7 +114,7 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
                 "EpicFight layer rendering player={}, item={}, slot={}, packedLight={}, parentExpected=true",
                 Diagnostics.playerName(player),
                 Diagnostics.itemId(stack),
-                Diagnostics.slot(cachedItem.slotContext()),
+                Diagnostics.slot(cachedItem.slot()),
                 packedLight);
         poseStack.pushPose();
         applyRuleTransform(poseStack, entityPatch, poses, BELT_LANTERN_RULE, player);
@@ -124,11 +123,12 @@ public class EpicFightWaistItemLayer extends UniqueLayer<LivingEntity, LivingEnt
         if (parent != null) {
             float bodyYaw = Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot);
             float headYaw = Mth.rotLerp(partialTicks, player.yHeadRotO, player.getYHeadRot());
-            WAIST_RENDERER.render(
+            CurioWaistItemRenderer.renderWaistItem(
                     stack,
-                    cachedItem.slotContext(),
+                    cachedItem.slot(),
+                    player,
                     poseStack,
-                    parent,
+                    parent.getModel(),
                     buffers,
                     packedLight,
                     player.walkAnimation.position(partialTicks),

@@ -62,4 +62,15 @@ public final class Diagnostics {
                 + ",cosmetic=" + slotContext.cosmetic()
                 + ",visible=" + slotContext.visible();
     }
+
+    public static String slot(WaistSlot slot) {
+        if (slot == null) {
+            return "none";
+        }
+        return slot.source().name().toLowerCase()
+                + ":" + slot.identifier()
+                + "#" + slot.index()
+                + ",cosmetic=" + slot.cosmetic()
+                + ",visible=" + slot.visible();
+    }
 }

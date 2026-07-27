@@ -1,28 +1,30 @@
 # Dynamic Lantern
 
-Dynamic Lantern is a NeoForge 1.21.1 mod that renders supported Curios lantern items as visible waist lanterns and exposes compatible items to Iris/Oculus shader held-item lighting.
+Dynamic Lantern is a NeoForge 1.21.1 mod that renders supported Curios and Accessories items as visible waist lanterns and exposes compatible items to Iris/Oculus shader held-item lighting.
 
-Dynamic Lantern 是一个 NeoForge 1.21.1 模组，可以把支持的 Curios 灯笼物品渲染为玩家腰间灯笼，并让兼容物品参与 Iris/Oculus 的 shader 手持物品发光识别。
+Dynamic Lantern 是一个 NeoForge 1.21.1 模组，可以把支持的 Curios 和 Accessories 灯笼物品渲染为玩家腰间灯笼，并让兼容物品参与 Iris/Oculus 的 shader 手持物品发光识别。
 
 ## English
 
 ### Features
 
-- Renders supported Curios lantern items on the player's waist.
-- Adds an optional dedicated Curios Lantern slot controlled by Dynamic Lantern's common config.
+- Renders supported Curios and Accessories lantern items on the player's waist.
+- Adds dedicated Curios and Accessories Lantern slots controlled by Dynamic Lantern's common config.
 - Supports vanilla lanterns, soul lanterns, configured custom items, and built-in optional compatibility items.
+- Includes built-in Twilight Forest Firefly Jar support with dedicated waist placement and scaling.
 - Supports item-model rendering for non-block waist items.
 - Provides left-side and back-side placement options.
 - Adds configurable pendulum-style swing physics.
-- Lets Iris/Oculus shader held-item lighting use supported Curios light-emitting waist items, even when they are not in the user whitelist.
+- Lets Iris/Oculus shader held-item lighting use supported Curios or Accessories light-emitting waist items, even when they are not in the user whitelist.
 - Includes built-in shader lighting support for `cold_sweat:soulspring_lamp`, mapped as a soul lantern for shader held-item IDs.
 - Includes internal Epic Fight positioning, so EpicFightCuriosCompat is not required for correct lantern placement.
 - Avoids duplicate lantern rendering when EpicFightCuriosCompat is installed together with Dynamic Lantern.
-- Honors the Curios render visibility toggle, hiding both the waist model and shader held-item lighting when the slot display is disabled.
+- Honors Curios and Accessories render visibility toggles, hiding the waist model and lighting when the selected slot display is disabled.
 - Adds Dynamic Lantern's own Curios validator, so newly configured waist items can be equipped and show supported Curios slot tooltips without re-entering the world.
 - When both the dedicated Lantern slot and the Belt slot contain renderable lanterns, the dedicated Lantern slot is rendered first and the Belt lantern is ignored.
 - Keeps render diagnostics disabled by default; `renderDiagnosticLog` can be enabled manually when troubleshooting.
-- Keeps Curios scans and optional compatibility hooks cached where possible to reduce render-thread and server-thread overhead.
+- Keeps Curios and Accessories scans event-driven and cached without adding per-tick inventory scans.
+- Lets LambDynamicLights use every visible, renderable Curios and Accessories waist light while preserving its item and underwater lighting rules.
 - Does not add a dynamic light source.
 
 ### Built-In Defaults
@@ -31,6 +33,7 @@ The config screen only shows player-added item IDs. Built-in defaults are hidden
 
 - `minecraft:lantern`
 - `minecraft:soul_lantern`
+- `twilightforest:firefly_jar`
 - `under_the_moon:moon_lamp`
 - `cold_sweat:soulspring_lamp`
 - Skinned Lanterns lantern variants
@@ -41,18 +44,18 @@ Optional item IDs are declared with `required: false`, so the game still loads n
 
 Additional item IDs can be added from the Dynamic Lantern config screen. After an item is added:
 
-- It can render from the dedicated Curios Lantern slot or the Curios Belt slot.
-- Curios can recognize it as valid for supported Dynamic Lantern slots through Dynamic Lantern's runtime validator.
+- It can render from the dedicated Lantern slot or Belt slot in Curios and Accessories.
+- Both accessory systems recognize configured items through Dynamic Lantern's runtime validators.
 - The Curios item tooltip can show supported slots immediately, without requiring the player to leave and re-enter the world.
-- Light-emitting block items can participate in shader held-item lighting when equipped in Curios.
+- Light-emitting block items can participate in shader held-item lighting when equipped in either supported accessory system.
 
 ### Cold Sweat Soulspring Lamp
 
 `cold_sweat:soulspring_lamp` receives dedicated support:
 
-- It can be equipped in the Curios Belt slot by default, or in the dedicated Lantern slot when that slot is enabled.
-- When equipped in Curios, it can use the same attack fuel behavior as the hand-held Soulspring Lamp.
-- It participates in shader held-item lighting like a soul lantern while equipped in hand or Curios.
+- It can be equipped in the Curios or Accessories Belt slot by default, or in either dedicated Lantern slot when enabled.
+- When equipped in a managed Curios or Accessories slot, it can use the same attack fuel behavior as the hand-held Soulspring Lamp.
+- It participates in shader held-item lighting like a soul lantern while equipped in hand or a managed waist slot.
 - It does not spoof hand rendering or hand animation, so normal held-item rendering is not disturbed.
 
 ### Configuration
@@ -68,7 +71,7 @@ The client config screen includes:
 - Curios shader lighting override
 - Additional waist display item list
 
-The common config file includes `enableLanternSlot`, which controls whether the dedicated Curios Lantern slot is added to players. It is disabled by default.
+The common config file includes `enableLanternSlot`, which controls whether the dedicated Curios and Accessories Lantern slots are added to players. It is disabled by default.
 
 The client config file also includes:
 
@@ -86,6 +89,9 @@ The client config file also includes:
 - Iris/Oculus-compatible shader pipeline for held-item shader lighting
 - Epic Fight
 - EpicFightCuriosCompat, with Dynamic Lantern taking over lantern rendering while leaving other Curios compatibility behavior intact
+- LambDynamicLights for Curios dynamic lighting (tested with `4.8.10+1.21.1`)
+- Accessories `1.1.0-beta.53+1.21.1` for optional Belt and Lantern slot support
+- Twilight Forest Firefly Jar
 - Cold Sweat
 - Under the Moon
 - Skinned Lanterns
@@ -94,21 +100,23 @@ The client config file also includes:
 
 ### 功能
 
-- 将支持的 Curios 灯笼物品渲染在玩家腰间。
-- 新增可选的专用 Curios 灯笼槽位，由 Dynamic Lantern 的 common 配置控制。
+- 将支持的 Curios 和 Accessories 灯笼物品渲染在玩家腰间。
+- 新增专用 Curios 和 Accessories 灯笼槽位，由 Dynamic Lantern 的 common 配置控制。
 - 默认支持原版灯笼、灵魂灯笼、玩家配置的自定义物品，以及内置的可选兼容物品。
+- 内置暮色森林 Firefly Jar 兼容，并提供专用的腰间位置和缩放处理。
 - 支持非方块物品使用物品模型进行腰间渲染。
 - 提供左侧悬挂和靠后位置选项。
 - 提供可配置的摆动物理效果。
-- Iris/Oculus 的 shader held-item lighting 可以识别受支持的 Curios 腰间发光物品，即使该物品没有加入玩家自定义名单。
+- Iris/Oculus 的 shader held-item lighting 可以识别受支持的 Curios 或 Accessories 腰间发光物品，即使该物品没有加入玩家自定义名单。
 - 内置支持 `cold_sweat:soulspring_lamp` 的 shader 发光识别，并按灵魂灯笼交给光影处理。
 - 内置 Epic Fight 模型定位，不再依赖 EpicFightCuriosCompat 修正灯笼位置。
 - 与 EpicFightCuriosCompat 同时安装时，会避免灯笼重复渲染。
-- 遵守 Curios 的显示开关；关闭槽位显示时，腰间模型和 shader held-item lighting 都会一起关闭。
+- 遵守 Curios 和 Accessories 的显示开关；关闭所选槽位显示时，腰间模型和灯光都会一起关闭。
 - 添加 Dynamic Lantern 自己的 Curios validator，玩家新增的腰部显示物品可以立刻放入受支持槽位并显示 Curios 槽位 tooltip，不需要重新进入世界。
 - 当专用灯笼槽位和腰带槽位同时放入可渲染灯笼时，优先渲染专用灯笼槽位，忽略腰带灯笼。
 - 发布版默认关闭渲染诊断日志；需要排查问题时可以手动打开 `renderDiagnosticLog`。
-- 尽量缓存 Curios 扫描和可选兼容逻辑，降低渲染线程和服务器线程上的额外开销。
+- Curios 和 Accessories 扫描使用事件驱动缓存，不增加每 tick 背包扫描。
+- LambDynamicLights 可以识别所有可见、可渲染的 Curios 和 Accessories 腰间光源，并保留其物品和水下发光规则。
 - 本模组不添加动态光源。
 
 ### 内置默认物品
@@ -117,6 +125,7 @@ The client config file also includes:
 
 - `minecraft:lantern`
 - `minecraft:soul_lantern`
+- `twilightforest:firefly_jar`
 - `under_the_moon:moon_lamp`
 - `cold_sweat:soulspring_lamp`
 - Skinned Lanterns 的灯笼变体
@@ -127,18 +136,18 @@ The client config file also includes:
 
 可以从 Dynamic Lantern 设置界面添加额外物品 ID。添加后：
 
-- 该物品可以从专用 Curios 灯笼槽位或 Curios 腰带槽位渲染。
-- Curios 会通过 Dynamic Lantern 的运行时 validator 识别它可以放入受支持槽位。
+- 该物品可以从 Curios 和 Accessories 的专用灯笼槽位或腰带槽位渲染。
+- 两个饰品系统都会通过 Dynamic Lantern 的运行时 validator 识别配置物品。
 - 物品 tooltip 可以立刻显示受支持槽位，不再需要玩家退出并重新进入世界。
-- 如果它本身是会发光的方块物品，放在 Curios 腰带中时可以参与 shader held-item lighting。
+- 如果它本身是会发光的方块物品，放在任一受支持的饰品系统中时都能参与 shader held-item lighting。
 
 ### Cold Sweat Soulspring Lamp
 
 `cold_sweat:soulspring_lamp` 拥有专门适配：
 
-- 默认可以放入 Curios 腰带槽位；启用专用灯笼槽位后，也可以放入该槽位。
-- 放在 Curios 中时，可以触发与手持 Soulspring Lamp 类似的攻击燃料行为。
-- 放在手中或 Curios 中时，会像灵魂灯笼一样参与 shader held-item lighting。
+- 默认可以放入 Curios 或 Accessories 腰带槽位；启用专用灯笼槽位后，也可以放入对应槽位。
+- 放在受管理的 Curios 或 Accessories 槽位中时，可以触发与手持 Soulspring Lamp 类似的攻击燃料行为。
+- 放在手中或受管理的腰间槽位中时，会像灵魂灯笼一样参与 shader held-item lighting。
 - 不伪造手部渲染或手部动画，因此不会影响玩家正常拿着其他物品时的渲染。
 
 ### 配置
@@ -154,7 +163,7 @@ The client config file also includes:
 - Curios 光影发光识别
 - 额外腰间显示物品列表
 
-common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添加专用 Curios 灯笼槽位，默认关闭。
+common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添加专用 Curios 和 Accessories 灯笼槽位，默认关闭。
 
 客户端配置文件还包含：
 
@@ -172,12 +181,15 @@ common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添�
 - Iris/Oculus 兼容光影管线，用于 shader held-item lighting
 - Epic Fight
 - EpicFightCuriosCompat，灯笼渲染由 Dynamic Lantern 接管，其他 Curios 兼容逻辑保持不变
+- LambDynamicLights，用于 Curios 动态光照（已使用 `4.8.10+1.21.1` 测试）
+- Accessories `1.1.0-beta.53+1.21.1`，用于可选的腰带槽和灯笼槽兼容
+- 暮色森林 Firefly Jar
 - Cold Sweat
 - Under the Moon
 - Skinned Lanterns
 
 ## Version / 版本
 
-Current version / 当前版本：`1.8.0`
+Current version / 当前版本：`1.8.8`
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes.

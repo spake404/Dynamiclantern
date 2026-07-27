@@ -5,6 +5,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.fml.ModList;
+import org.com.dynamiclantern.compat.accessories.AccessoriesCompat;
 import top.theillusivec4.curios.api.CuriosApi;
 
 public final class LanternSlotManager {
@@ -30,6 +32,9 @@ public final class LanternSlotManager {
             handler.processSlots();
             handler.handleInvalidStacks();
         });
+        if (ModList.get().isLoaded("accessories")) {
+            AccessoriesCompat.syncLanternSlot(player);
+        }
         WaistItemCache.clear(player);
     }
 

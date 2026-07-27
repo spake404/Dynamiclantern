@@ -28,6 +28,13 @@ public class DynamiclanternMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.endsWith("EpicFightCuriosCompatSlotRuleMixin")) {
             return isModLoaded("epicfight_curios_compat");
         }
+        if (mixinClassName.endsWith("LambDynamicLightsMixin")
+                || mixinClassName.endsWith("LambDynamicLightsCuriosCompatMixin")) {
+            return isModLoaded("lambdynlights_runtime");
+        }
+        if (mixinClassName.endsWith("LambDynamicLightsAccessoriesCompatMixin")) {
+            return isModLoaded("lambdynlights_runtime") && isModLoaded("accessories");
+        }
         return true;
     }
 

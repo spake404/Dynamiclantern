@@ -11,6 +11,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import org.com.dynamiclantern.client.DynamiclanternClient;
+import org.com.dynamiclantern.compat.accessories.AccessoriesCompat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -26,6 +27,9 @@ public class Dynamiclantern {
         CuriosApi.registerCurioPredicate(
                 ResourceLocation.fromNamespaceAndPath(MODID, "waist_renderable"),
                 slotResult -> WaistItemRules.canEquipInWaistItemSlot(slotResult.stack(), slotResult.slotContext()));
+        if (ModList.get().isLoaded("accessories")) {
+            AccessoriesCompat.init();
+        }
         if (FMLEnvironment.dist == Dist.CLIENT) {
             IConfigScreenFactory configScreenFactory = DynamiclanternClient.configScreenFactory();
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, configScreenFactory);

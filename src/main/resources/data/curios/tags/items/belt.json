@@ -4,6 +4,10 @@
     "minecraft:lantern",
     "minecraft:soul_lantern",
     {
+      "id": "twilightforest:firefly_jar",
+      "required": false
+    },
+    {
       "id": "under_the_moon:moon_lamp",
       "required": false
     },
