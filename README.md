@@ -90,7 +90,7 @@ The client config file also includes:
 - Epic Fight
 - EpicFightCuriosCompat, with Dynamic Lantern taking over lantern rendering while leaving other Curios compatibility behavior intact
 - LambDynamicLights for Curios dynamic lighting (tested with `4.8.10+1.21.1`)
-- Accessories `1.1.0-beta.53+1.21.1` for optional Belt and Lantern slot support
+- Accessories `1.1.0-beta.29+1.21.1` or newer for optional Belt and Lantern slot support (smoke-tested with beta.29 and beta.53)
 - Twilight Forest Firefly Jar
 - Cold Sweat
 - Under the Moon
@@ -182,7 +182,7 @@ common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添�
 - Epic Fight
 - EpicFightCuriosCompat，灯笼渲染由 Dynamic Lantern 接管，其他 Curios 兼容逻辑保持不变
 - LambDynamicLights，用于 Curios 动态光照（已使用 `4.8.10+1.21.1` 测试）
-- Accessories `1.1.0-beta.53+1.21.1`，用于可选的腰带槽和灯笼槽兼容
+- Accessories `1.1.0-beta.29+1.21.1` 或更高版本，用于可选的腰带槽和灯笼槽兼容（已使用 beta.29 和 beta.53 进行启动测试）
 - 暮色森林 Firefly Jar
 - Cold Sweat
 - Under the Moon

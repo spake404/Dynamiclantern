@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.8.9 - 2026-07-28
+
+### English
+
+- Lowered the optional Accessories minimum from `1.1.0-beta.53+1.21.1` to `1.1.0-beta.29+1.21.1`.
+- Compiled against the minimum supported Accessories API while keeping beta.53 as the default local runtime test version.
+- Added Gradle properties for overriding the Accessories compile-time and runtime CurseForge file IDs during compatibility testing.
+- Smoke-tested client startup with Accessories beta.29, beta.53, and without Accessories installed.
+
+### 中文
+
+- 将可选 Accessories 的最低版本从 `1.1.0-beta.53+1.21.1` 降低到 `1.1.0-beta.29+1.21.1`。
+- 使用最低支持的 Accessories API 进行编译，同时保留 beta.53 作为默认本地运行测试版本。
+- 新增 Gradle 属性，可在兼容性测试时分别覆盖 Accessories 编译期和运行期的 CurseForge 文件 ID。
+- 已分别使用 Accessories beta.29、beta.53 以及未安装 Accessories 的环境完成客户端启动测试。
+
 ## 1.8.8 - 2026-07-27
 
 ### English

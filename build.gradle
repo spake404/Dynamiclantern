@@ -111,6 +111,11 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
+    def accessoriesCompileFileId = providers.gradleProperty('accessories_compile_file_id').get()
+    def accessoriesRuntimeFileId = providers.gradleProperty('accessories_runtime_file_id')
+            .orElse(accessoriesCompileFileId)
+            .get()
+
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     runtimeOnly "curse.maven:the-twilight-forest-227639:7797302"
     implementation "curse.maven:lambdynamiclights-393442:8286174"
@@ -123,11 +128,11 @@ dependencies {
     runtimeOnly "curse.maven:sodium-394468:6382651"
     implementation "curse.maven:lendercataclysm-551586:8246034"
     implementation "curse.maven:lionfish-api-1001614:8230518"
-    compileOnly "curse.maven:accessories-938917:7583320"
+    compileOnly "curse.maven:accessories-938917:${accessoriesCompileFileId}"
     compileOnly "curse.maven:owo-lib-532610:6785734"
     compileOnly "net.fabricmc.fabric-api:fabric-api-base:0.4.42+6573ed8c19"
     if (!providers.gradleProperty('withoutAccessories').isPresent()) {
-        runtimeOnly "curse.maven:accessories-938917:7583320"
+        runtimeOnly "curse.maven:accessories-938917:${accessoriesRuntimeFileId}"
         runtimeOnly "curse.maven:owo-lib-532610:6785734"
     }
     // Example mod dependency with JEI
