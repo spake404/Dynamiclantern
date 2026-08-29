@@ -26,7 +26,7 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue SHADER_OFFHAND_OVERRIDE = BUILDER
             .comment("Make Iris/Oculus see a light-emitting Curios or Accessories waist item as the offhand item for shader held-item lighting.")
             .define("shaderOffhandOverride", true);
-    public static final ModConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = BUILDER
+    public static final ModConfigSpec.BooleanValue SOULSPRING_LAMP_DEBUG_LOG = COMMON_BUILDER
             .comment("Log Cold Sweat Soulspring Lamp Curios compatibility diagnostics while the lamp is equipped.")
             .define("soulspringLampDebugLog", false);
     public static final ModConfigSpec.BooleanValue RENDER_DIAGNOSTIC_LOG = BUILDER

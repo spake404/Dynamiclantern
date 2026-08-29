@@ -71,11 +71,13 @@ The client config screen includes:
 - Curios shader lighting override
 - Additional waist display item list
 
-The common config file includes `enableLanternSlot`, which controls whether the dedicated Curios and Accessories Lantern slots are added to players. It is disabled by default.
+The common config file includes:
+
+- `enableLanternSlot`: controls whether the dedicated Curios and Accessories Lantern slots are added to players, disabled by default.
+- `soulspringLampDebugLog`: Cold Sweat Soulspring Lamp diagnostics, disabled by default.
 
 The client config file also includes:
 
-- `soulspringLampDebugLog`: Cold Sweat Soulspring Lamp diagnostics, disabled by default.
 - `renderDiagnosticLog`: Dynamic Lantern render diagnostics, disabled by default because it can be noisy during normal gameplay.
 
 ### Requirements
@@ -163,11 +165,13 @@ The client config file also includes:
 - Curios 光影发光识别
 - 额外腰间显示物品列表
 
-common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添加专用 Curios 和 Accessories 灯笼槽位，默认关闭。
+common 配置文件包含：
+
+- `enableLanternSlot`：控制是否为玩家添加专用 Curios 和 Accessories 灯笼槽位，默认关闭。
+- `soulspringLampDebugLog`：Cold Sweat Soulspring Lamp 诊断日志，默认关闭。
 
 客户端配置文件还包含：
 
-- `soulspringLampDebugLog`：Soulspring Lamp 诊断日志，默认关闭。
 - `renderDiagnosticLog`：Dynamic Lantern 渲染诊断日志，默认关闭，因为正常游玩时会比较吵。
 
 ### 需求

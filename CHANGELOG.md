@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.9.5 - 2026-08-29
+
+### English
+
+- Moved the Cold Sweat Soulspring Lamp diagnostic toggle to the common config so dedicated servers no longer read an unloaded client config.
+- Guarded the diagnostic toggle lookup until the common config has finished loading.
+
+### 中文
+
+- 将 Cold Sweat 灵魂之泉灯诊断日志开关移至 common 配置，避免专用服务器读取尚未加载的客户端配置。
+- 在 common 配置完成加载前跳过诊断开关读取。
+
 ## 1.8.9 - 2026-07-28
 
 ### English
