@@ -68,13 +68,15 @@ The client config screen includes:
 - Curios shader lighting override
 - Additional waist display item whitelist
 
-The common config file includes `enableLanternSlot`, which controls whether the dedicated Curios Lantern slot is added to players. It is disabled by default. The client config file also includes `soulspringLampDebugLog` for Soulspring Lamp diagnostics. It is disabled by default in release builds.
+The common config file includes `enableLanternSlot`, which controls whether the dedicated Curios Lantern slot is added to players, and `soulspringLampDebugLog` for Soulspring Lamp diagnostics. Both are disabled by default.
 
 ### Requirements
 
 - Minecraft `1.20.1`
 - Forge `47+`
-- Curios `5.x`
+- Official Curios `5.8.0+1.20.1` or newer
+
+Dynamic Lantern 1.20.1 supports the official Curios mod only. Accessories and Accessories Curios Compat Layer are not supported. If `accessories_cclayer` is installed, Dynamic Lantern stops during mod loading with an actionable message instead of calling unsupported Curios handler methods.
 
 ### Optional Compatibility
 
@@ -148,13 +150,15 @@ The common config file includes `enableLanternSlot`, which controls whether the 
 - Curios 光影发光识别
 - 额外腰间显示物品白名单
 
-common 配置文件包含 `enableLanternSlot`，用于控制是否为玩家添加专用 Curios 灯笼槽位，默认关闭。客户端配置文件还包含 `soulspringLampDebugLog`，用于 Soulspring Lamp 诊断日志。发布版默认关闭。
+common 配置文件包含 `enableLanternSlot` 和 `soulspringLampDebugLog`：前者控制是否为玩家添加专用 Curios 灯笼槽位，后者用于 Soulspring Lamp 诊断日志，两者默认关闭。
 
 ### 需求
 
 - Minecraft `1.20.1`
 - Forge `47+`
-- Curios `5.x`
+- 官方 Curios `5.8.0+1.20.1` 或更高版本
+
+Dynamic Lantern 1.20.1 仅支持官方 Curios，不支持 Accessories 和 Accessories Curios Compat Layer。安装 `accessories_cclayer` 时，Dynamic Lantern 会在模组加载阶段给出明确提示，而不是继续调用兼容层未实现的 Curios 槽位方法。
 
 ### 可选兼容
 

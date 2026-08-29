@@ -159,7 +159,7 @@ public final class ColdSweatSoulspringCompat {
     }
 
     private static boolean isDebugLogEnabled() {
-        return Config.SOULSPRING_LAMP_DEBUG_LOG.get();
+        return Config.isCommonLoaded() && Config.SOULSPRING_LAMP_DEBUG_LOG.get();
     }
 
     private static boolean isModLoaded(String modid) {

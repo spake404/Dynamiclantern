@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.9.5 - 2026-08-29
+
+### English
+
+- Moved the Cold Sweat Soulspring Lamp diagnostic toggle to the common config so dedicated servers no longer read an unloaded client config.
+- Guarded the diagnostic toggle lookup until the common config has finished loading.
+- Set the minimum official Curios version to `5.8.0+1.20.1`, the earliest stable 1.20.1 release that provides every API used by Dynamic Lantern.
+- Added an explicit loading error for Accessories Curios Compat Layer, which is not supported by the 1.20.1 branch, instead of crashing later on missing Curios handler methods.
+- Disabled Dynamic Lantern mixins when the unsupported compatibility layer is present so the actionable dependency error is reported first.
+
+### 中文
+
+- 将 Cold Sweat 灵魂之泉灯诊断日志开关移至 common 配置，避免专用服务器读取尚未加载的客户端配置。
+- 在 common 配置完成加载前跳过诊断开关读取。
+- 将官方 Curios 最低版本设为 `5.8.0+1.20.1`；这是首个提供 Dynamic Lantern 所需全部 API 的 1.20.1 稳定版。
+- 1.20.1 分支不支持 Accessories Curios Compat Layer；检测到该兼容层时会提供明确的加载错误，不再于后续槽位处理阶段因缺少 Curios 方法而崩溃。
+- 检测到不受支持的兼容层时跳过 Dynamic Lantern Mixin，确保优先显示可操作的依赖错误。
+
 ## 1.8.6 - 2026-07-25
 
 ### English

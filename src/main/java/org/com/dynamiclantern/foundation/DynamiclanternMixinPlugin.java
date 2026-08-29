@@ -22,6 +22,9 @@ public class DynamiclanternMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (isModLoaded("cclayer")) {
+            return false;
+        }
         if (mixinClassName.endsWith("IrisIdMapUniformsMixin") || mixinClassName.endsWith("IrisShaderReloadMixin")) {
             return isModLoaded("iris") || isModLoaded("oculus");
         }

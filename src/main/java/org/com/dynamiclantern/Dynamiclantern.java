@@ -19,8 +19,14 @@ import top.theillusivec4.curios.api.CuriosApi;
 public class Dynamiclantern {
     public static final String MODID = "dynamiclantern";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+    private static final String ACCESSORIES_CURIOS_COMPAT_LAYER_MODID = "cclayer";
 
     public Dynamiclantern() {
+        if (ModList.get().isLoaded(ACCESSORIES_CURIOS_COMPAT_LAYER_MODID)) {
+            throw new IllegalStateException(
+                    "Dynamic Lantern for Minecraft 1.20.1 requires the official Curios 5.8.0 or newer and does not support Accessories Curios Compat Layer (cclayer). Remove accessories_cclayer and install the official Curios mod.");
+        }
+
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> DynamiclanternClient.registerOptionalModListeners(modEventBus));
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
